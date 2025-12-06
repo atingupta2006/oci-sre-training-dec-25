@@ -1,0 +1,1 @@
+Replace this file with your logo (PNG/SVG) placed at docs/assets/logo.png or logo.svg

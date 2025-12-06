@@ -1,0 +1,4219 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="SRE with Oracle Cloud Infrastructure Knowledge Base">
+      
+      
+      
+        <link rel="canonical" href="https://your-site-url.com/Day-5/08-oci-devops-pipeline-slis-lab/">
+      
+      
+        <link rel="prev" href="../07-oci-rest-apis-sre-dashboard-lab/">
+      
+      
+        <link rel="next" href="../09-end-of-day-review/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.0">
+    
+    
+      
+        <title>Day 5: Deploy Sample OCI DevOps Pipeline with SLIs Embedded - Hands-on Lab - SRE with Oracle Cloud Infrastructure</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.618322db.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../../stylesheets/bookmarks.css">
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    <body dir="ltr">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#day-5-deploy-sample-oci-devops-pipeline-with-slis-embedded-hands-on-lab" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../.." title="SRE with Oracle Cloud Infrastructure" class="md-header__button md-logo" aria-label="SRE with Oracle Cloud Infrastructure" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            SRE with Oracle Cloud Infrastructure
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Day 5: Deploy Sample OCI DevOps Pipeline with SLIs Embedded - Hands-on Lab
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="SRE with Oracle Cloud Infrastructure" class="md-nav__button md-logo" aria-label="SRE with Oracle Cloud Infrastructure" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    SRE with Oracle Cloud Infrastructure
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    SRE Training Program - BharatMart Platform
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../bookmarks/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Bookmarks
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_3" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../Day-1/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Day 1
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_3" id="__nav_3_label" tabindex="">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Day 1
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Day-1/01-what-is-site-reliability-engineering/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Day 1: What is Site Reliability Engineering?
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Day-1/02-history-of-sre/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Day 1: History of SRE (Google, Evolution into Mainstream)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Day-1/03-sre-vs-devops-vs-platform-engineering/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Day 1: SRE vs DevOps vs Platform Engineering
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Day-1/04-principles-of-sre-sli-slo-error-budget/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Day 1: Principles of SRE (SLI, SLO, Error Budget)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Day-1/05-oci-architecture-overview/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Day 1: OCI Architecture Overview
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Day-1/06-multi-region-oci-tenancy-demo/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Day 1: Create a Multi-Region OCI Tenancy (Demonstration)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Day-1/07-terraform-compute-instances-demo/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Day 1: Launch &amp; Configure OCI Compute Instances using Infrastructure-as-Code (Terraform) - Demonstration
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Day-1/08-configure-cloud-shell-sdks-lab/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Day 1: Configure Cloud Shell and SDKs for Automation (Hands-on Lab)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Day-1/09-identity-domains-iam-policies-lab/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Day 1: Set up Identity Domains and IAM Policies for SRE Access Control (Hands-on Lab)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_4" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../Day-2/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Day 2
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_4" id="__nav_4_label" tabindex="">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Day 2
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Day-2/01-defining-slis-slos-cloud-native/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Day 2: Defining and Implementing SLOs/SLIs for Cloud-Native Services
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Day-2/02-error-budgets-policy-enforcement/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Day 2: Error Budgets and Policy Enforcement
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Day-2/03-oci-integrates-sre-principles/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Day 2: How OCI Integrates with SRE Principles
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Day-2/04-define-sli-slos-demo/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Day 2: Define SLI/SLOs for a Sample Web App Running on OCI Load Balancer + Compute (Demonstration)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Day-2/05-error-budget-breach-simulation-demo/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Day 2: Error Budget Breach Simulation Using OCI Health Checks and Failover Testing (Demonstration)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Day-2/06-setup-oci-monitoring-lab/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Day 2: Set up OCI Monitoring (Metrics Explorer, Alarms) - Hands-on Lab
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Day-2/07-create-custom-metrics-telemetry-sdk-lab/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Day 2: Create Custom Metrics Using OCI Telemetry SDKs - Hands-on Lab
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Day-2/08-implement-alerting-workflows-lab/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Day 2: Implement Alerting Workflows with OCI Notifications and Email/SMS Triggers - Hands-on Lab
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Day-2/09-dashboards-visualization-lab/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Day 2: Create Dashboards and Visualization - Hands-on Lab
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_5" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../Day-3/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Day 3
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_5" id="__nav_5_label" tabindex="">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Day 3
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Day-3/01-what-is-toil-why-reduce/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Day 3: What is Toil and Why It Must Be Reduced
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Day-3/02-observability-metrics-logs-traces/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Day 3: Observability - Metrics, Logs, Traces
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Day-3/03-role-automation-sre-types/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Day 3: The Role of Automation in SRE and Types of Automation
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Day-3/04-terraform-resource-manager-demo/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Day 3: Automate Compute Instance Provisioning using OCI Resource Manager (Terraform) - Demonstration
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Day-3/05-oci-logging-real-time-analysis-lab/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Day 3: Use OCI Logging Service for Real-Time Log Stream Analysis - Hands-on Lab
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Day-3/06-logging-metrics-monitoring-lab/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Day 3: Create Logging Metrics, Push to OCI Monitoring, and Visualize - Hands-on Lab
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Day-3/07-reduce-toil-scheduled-functions-lab/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Day 3: Reduce Toil Using Scheduled Functions (OCI Functions + Events) - Hands-on Lab
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_6" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../Day-4/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Day 4
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_6" id="__nav_6_label" tabindex="">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_6">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Day 4
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Day-4/01-anti-fragility-chaos-engineering/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Day 4: Understanding Anti-fragility and Chaos Engineering
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Day-4/02-oci-services-ha-resilience/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Day 4: OCI Services for High Availability and Resilience
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Day-4/03-learning-from-failure-postmortem-culture/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Day 4: Learning from Failure, Postmortem Culture
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Day-4/04-simulate-region-failure-cross-region-dr-demo/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Day 4: Simulate Region Failure and Test Cross-Region DR - Demonstration
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Day-4/05-failure-injection-oci-cli-chaos-demo/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Day 4: Run Failure Injection Using OCI CLI and Chaos Simulation Scripts - Demonstration
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Day-4/06-load-balancer-auto-scaling-lab/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Day 4: Set up a Scalable App Using OCI Load Balancer + Auto Scaling - Hands-on Lab
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Day-4/07-oci-vault-secrets-resilience-lab/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Day 4: Use OCI Vault + Secrets for Configuration Resilience - Hands-on Lab
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Day-4/08-blameless-postmortem-simulated-outage-lab/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Day 4: Conduct a Blameless Postmortem on Simulated Outage - Hands-on Lab
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_7" checked>
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Day 5
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_7" id="__nav_7_label" tabindex="">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_7_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_7">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Day 5
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../01-organizational-shift-to-sre/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Day 5: Organizational Shift to SRE
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../02-blameless-culture-on-call-rotational-health/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Day 5: Blameless Culture, On-Call Design, Rotational Health
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../03-secure-automation-practices/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Day 5: Secure Automation Practices
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../04-sre-context-itil-agile-devops/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Day 5: SRE in the Context of ITIL, Agile, DevOps
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../05-service-connector-hub-incident-response-lab/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Day 5: Implement OCI Service Connector Hub for Automated Incident Response - Hands-on Lab
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../06-secure-automation-vault-dynamic-secrets-lab/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Day 5: Secure Automation Using OCI Vault + Dynamic Secrets - Hands-on Lab
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../07-oci-rest-apis-sre-dashboard-lab/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Day 5: Use OCI REST APIs to Build an SRE Dashboard - Hands-on Lab
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Day 5: Deploy Sample OCI DevOps Pipeline with SLIs Embedded - Hands-on Lab
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Day 5: Deploy Sample OCI DevOps Pipeline with SLIs Embedded - Hands-on Lab
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#audience-context-it-engineers-and-developers" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Audience Context: IT Engineers and Developers
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#0-deployment-assumptions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        0. Deployment Assumptions
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#1-objective-of-this-hands-on" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. Objective of This Hands-On
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#2-background-concepts" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. Background Concepts
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="2. Background Concepts">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#21-oci-devops-pipeline" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.1 OCI DevOps Pipeline
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#22-reliability-gates-in-cicd" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.2 Reliability Gates in CI/CD
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#23-sli-integration-in-pipelines" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.3 SLI Integration in Pipelines
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#3-hands-on-task-1-create-devops-project" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. Hands-On Task 1 — Create DevOps Project
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="3. Hands-On Task 1 — Create DevOps Project">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#purpose" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Purpose
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#steps" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Steps:
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Steps:">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#step-1-create-devops-project" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 1: Create DevOps Project
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-2-create-code-repository-or-connect-existing" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 2: Create Code Repository (or Connect Existing)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-3-create-artifact-repository" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 3: Create Artifact Repository
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#4-hands-on-task-2-create-build-pipeline" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4. Hands-On Task 2 — Create Build Pipeline
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="4. Hands-On Task 2 — Create Build Pipeline">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#purpose_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Purpose
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#steps_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Steps:
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Steps:">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#step-1-create-build-pipeline" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 1: Create Build Pipeline
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-2-add-build-stages" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 2: Add Build Stages
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-3-test-build-pipeline" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 3: Test Build Pipeline
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#5-hands-on-task-3-add-reliability-gates" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5. Hands-On Task 3 — Add Reliability Gates
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="5. Hands-On Task 3 — Add Reliability Gates">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#purpose_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Purpose
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#steps_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Steps:
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Steps:">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#step-1-create-pre-deployment-gate-function" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 1: Create Pre-Deployment Gate Function
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-2-add-gate-stage-to-deployment-pipeline" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 2: Add Gate Stage to Deployment Pipeline
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-3-create-post-deployment-validation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 3: Create Post-Deployment Validation
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#6-hands-on-task-4-configure-pipeline-triggers" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6. Hands-On Task 4 — Configure Pipeline Triggers
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="6. Hands-On Task 4 — Configure Pipeline Triggers">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#purpose_3" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Purpose
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#steps_3" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Steps:
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Steps:">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#step-1-create-build-trigger" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 1: Create Build Trigger
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-2-create-deployment-trigger" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 2: Create Deployment Trigger
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-3-test-trigger" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 3: Test Trigger
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#7-hands-on-task-5-integrate-sli-validation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7. Hands-On Task 5 — Integrate SLI Validation
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="7. Hands-On Task 5 — Integrate SLI Validation">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#purpose_4" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Purpose
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#steps_4" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Steps:
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Steps:">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#step-1-create-sli-validation-script" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 1: Create SLI Validation Script
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#8-summary-of-the-hands-on" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        8. Summary of the Hands-On
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#9-best-practices" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        9. Best Practices
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="9. Best Practices">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#reliability-gates" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Reliability Gates:
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#sli-integration" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        SLI Integration:
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#10-troubleshooting" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        10. Troubleshooting
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="10. Troubleshooting">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#build-pipeline-fails" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Build Pipeline Fails
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#deployment-blocked-by-gate" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Deployment Blocked by Gate
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#sli-validation-fails" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        SLI Validation Fails
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#11-solutions-key-instructor-reference" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        11. Solutions Key (Instructor Reference)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="11. Solutions Key (Instructor Reference)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#solution-key-task-1-devops-project" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ✔ Solution Key — Task 1: DevOps Project
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="✔ Solution Key — Task 1: DevOps Project">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#expected-configuration" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Expected Configuration:
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#solution-key-task-2-build-pipeline" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ✔ Solution Key — Task 2: Build Pipeline
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="✔ Solution Key — Task 2: Build Pipeline">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#expected-results" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Expected Results:
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#solution-key-task-3-reliability-gates" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ✔ Solution Key — Task 3: Reliability Gates
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="✔ Solution Key — Task 3: Reliability Gates">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#expected-results_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Expected Results:
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#solution-key-task-4-triggers" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ✔ Solution Key — Task 4: Triggers
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="✔ Solution Key — Task 4: Triggers">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#expected-results_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Expected Results:
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#end-of-hands-on-document" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        End of Hands-On Document
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../09-end-of-day-review/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Day 5: Review, Q&amp;A, Sample Exam
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_8" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../Presentation/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Presentation
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_8_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_8">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Presentation
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#audience-context-it-engineers-and-developers" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Audience Context: IT Engineers and Developers
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#0-deployment-assumptions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        0. Deployment Assumptions
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#1-objective-of-this-hands-on" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. Objective of This Hands-On
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#2-background-concepts" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. Background Concepts
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="2. Background Concepts">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#21-oci-devops-pipeline" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.1 OCI DevOps Pipeline
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#22-reliability-gates-in-cicd" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.2 Reliability Gates in CI/CD
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#23-sli-integration-in-pipelines" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.3 SLI Integration in Pipelines
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#3-hands-on-task-1-create-devops-project" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. Hands-On Task 1 — Create DevOps Project
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="3. Hands-On Task 1 — Create DevOps Project">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#purpose" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Purpose
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#steps" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Steps:
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Steps:">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#step-1-create-devops-project" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 1: Create DevOps Project
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-2-create-code-repository-or-connect-existing" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 2: Create Code Repository (or Connect Existing)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-3-create-artifact-repository" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 3: Create Artifact Repository
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#4-hands-on-task-2-create-build-pipeline" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4. Hands-On Task 2 — Create Build Pipeline
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="4. Hands-On Task 2 — Create Build Pipeline">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#purpose_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Purpose
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#steps_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Steps:
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Steps:">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#step-1-create-build-pipeline" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 1: Create Build Pipeline
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-2-add-build-stages" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 2: Add Build Stages
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-3-test-build-pipeline" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 3: Test Build Pipeline
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#5-hands-on-task-3-add-reliability-gates" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5. Hands-On Task 3 — Add Reliability Gates
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="5. Hands-On Task 3 — Add Reliability Gates">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#purpose_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Purpose
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#steps_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Steps:
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Steps:">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#step-1-create-pre-deployment-gate-function" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 1: Create Pre-Deployment Gate Function
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-2-add-gate-stage-to-deployment-pipeline" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 2: Add Gate Stage to Deployment Pipeline
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-3-create-post-deployment-validation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 3: Create Post-Deployment Validation
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#6-hands-on-task-4-configure-pipeline-triggers" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6. Hands-On Task 4 — Configure Pipeline Triggers
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="6. Hands-On Task 4 — Configure Pipeline Triggers">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#purpose_3" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Purpose
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#steps_3" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Steps:
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Steps:">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#step-1-create-build-trigger" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 1: Create Build Trigger
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-2-create-deployment-trigger" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 2: Create Deployment Trigger
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-3-test-trigger" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 3: Test Trigger
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#7-hands-on-task-5-integrate-sli-validation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7. Hands-On Task 5 — Integrate SLI Validation
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="7. Hands-On Task 5 — Integrate SLI Validation">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#purpose_4" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Purpose
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#steps_4" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Steps:
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Steps:">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#step-1-create-sli-validation-script" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 1: Create SLI Validation Script
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#8-summary-of-the-hands-on" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        8. Summary of the Hands-On
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#9-best-practices" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        9. Best Practices
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="9. Best Practices">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#reliability-gates" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Reliability Gates:
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#sli-integration" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        SLI Integration:
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#10-troubleshooting" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        10. Troubleshooting
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="10. Troubleshooting">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#build-pipeline-fails" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Build Pipeline Fails
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#deployment-blocked-by-gate" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Deployment Blocked by Gate
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#sli-validation-fails" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        SLI Validation Fails
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#11-solutions-key-instructor-reference" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        11. Solutions Key (Instructor Reference)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="11. Solutions Key (Instructor Reference)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#solution-key-task-1-devops-project" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ✔ Solution Key — Task 1: DevOps Project
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="✔ Solution Key — Task 1: DevOps Project">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#expected-configuration" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Expected Configuration:
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#solution-key-task-2-build-pipeline" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ✔ Solution Key — Task 2: Build Pipeline
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="✔ Solution Key — Task 2: Build Pipeline">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#expected-results" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Expected Results:
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#solution-key-task-3-reliability-gates" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ✔ Solution Key — Task 3: Reliability Gates
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="✔ Solution Key — Task 3: Reliability Gates">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#expected-results_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Expected Results:
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#solution-key-task-4-triggers" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ✔ Solution Key — Task 4: Triggers
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="✔ Solution Key — Task 4: Triggers">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#expected-results_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Expected Results:
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#end-of-hands-on-document" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        End of Hands-On Document
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+
+                  
+
+
+
+<h1 id="day-5-deploy-sample-oci-devops-pipeline-with-slis-embedded-hands-on-lab">Day 5: Deploy Sample OCI DevOps Pipeline with SLIs Embedded - Hands-on Lab<a class="headerlink" href="#day-5-deploy-sample-oci-devops-pipeline-with-slis-embedded-hands-on-lab" title="Permanent link">&para;</a></h1>
+<h3 id="audience-context-it-engineers-and-developers">Audience Context: IT Engineers and Developers<a class="headerlink" href="#audience-context-it-engineers-and-developers" title="Permanent link">&para;</a></h3>
+<hr />
+<h2 id="0-deployment-assumptions">0. Deployment Assumptions<a class="headerlink" href="#0-deployment-assumptions" title="Permanent link">&para;</a></h2>
+<p>For this hands-on lab, you will create an OCI DevOps pipeline with reliability gates and SLI validation.</p>
+<p><strong>Prerequisites:</strong>
+* OCI tenancy with appropriate permissions
+* OCI DevOps service enabled
+* OCI CLI configured
+* Understanding of CI/CD pipelines
+* BharatMart application code repository
+* Basic understanding of SLIs/SLOs from Day 2</p>
+<p><strong>Assumed Deployment:</strong>
+* BharatMart application source code available
+* Application deployed and monitored
+* SLIs/SLOs defined for BharatMart
+* Monitoring and alarms configured</p>
+<hr />
+<h2 id="1-objective-of-this-hands-on">1. Objective of This Hands-On<a class="headerlink" href="#1-objective-of-this-hands-on" title="Permanent link">&para;</a></h2>
+<p>By completing this exercise, students will:</p>
+<ul>
+<li>Understand OCI DevOps pipeline structure</li>
+<li>Create build and deployment pipelines</li>
+<li>Add reliability gates with SLI validation</li>
+<li>Configure pre-deployment checks</li>
+<li>Implement post-deployment validation</li>
+<li>Integrate SRE practices into CI/CD workflows</li>
+</ul>
+<hr />
+<h2 id="2-background-concepts">2. Background Concepts<a class="headerlink" href="#2-background-concepts" title="Permanent link">&para;</a></h2>
+<h3 id="21-oci-devops-pipeline">2.1 OCI DevOps Pipeline<a class="headerlink" href="#21-oci-devops-pipeline" title="Permanent link">&para;</a></h3>
+<p><strong>OCI DevOps</strong> provides CI/CD capabilities for OCI deployments with:</p>
+<ul>
+<li><strong>Build Pipelines:</strong> Compile, test, and build applications</li>
+<li><strong>Deployment Pipelines:</strong> Deploy to Compute, Container Engine, Functions</li>
+<li><strong>Artifact Repositories:</strong> Store build artifacts</li>
+<li><strong>Triggers:</strong> Automate pipeline execution (code commits, schedules)</li>
+<li><strong>Stages:</strong> Modular pipeline stages for flexibility</li>
+</ul>
+<h3 id="22-reliability-gates-in-cicd">2.2 Reliability Gates in CI/CD<a class="headerlink" href="#22-reliability-gates-in-cicd" title="Permanent link">&para;</a></h3>
+<p><strong>Reliability Gates</strong> are checkpoints in deployment pipelines that validate:</p>
+<ul>
+<li><strong>Pre-Deployment:</strong></li>
+<li>Error budget availability</li>
+<li>Current service health</li>
+<li>Test results</li>
+<li>
+<p>Security scans</p>
+</li>
+<li>
+<p><strong>Post-Deployment:</strong></p>
+</li>
+<li>Health check verification</li>
+<li>Error rate monitoring</li>
+<li>Latency validation</li>
+<li>Rollback triggers</li>
+</ul>
+<h3 id="23-sli-integration-in-pipelines">2.3 SLI Integration in Pipelines<a class="headerlink" href="#23-sli-integration-in-pipelines" title="Permanent link">&para;</a></h3>
+<p><strong>SLI Validation</strong> ensures deployments don&rsquo;t breach SLOs:</p>
+<ul>
+<li>Check error budget before deployment</li>
+<li>Monitor metrics during deployment</li>
+<li>Validate SLIs after deployment</li>
+<li>Automatic rollback on SLO breach</li>
+</ul>
+<hr />
+<h2 id="3-hands-on-task-1-create-devops-project">3. Hands-On Task 1 — Create DevOps Project<a class="headerlink" href="#3-hands-on-task-1-create-devops-project" title="Permanent link">&para;</a></h2>
+<h4 id="purpose">Purpose<a class="headerlink" href="#purpose" title="Permanent link">&para;</a></h4>
+<p>Set up OCI DevOps project and repository for BharatMart.</p>
+<h3 id="steps">Steps:<a class="headerlink" href="#steps" title="Permanent link">&para;</a></h3>
+<h4 id="step-1-create-devops-project">Step 1: Create DevOps Project<a class="headerlink" href="#step-1-create-devops-project" title="Permanent link">&para;</a></h4>
+<ol>
+<li>
+<p><strong>Navigate to DevOps:</strong>
+   - Go to <strong>OCI Console → Developer Services → DevOps → Projects</strong>
+   - Select your compartment
+   - Click <strong>Create Project</strong></p>
+</li>
+<li>
+<p><strong>Configure Project:</strong>
+   - <strong>Name:</strong> <code>&lt;student-id&gt;-bharatmart-devops</code>
+   - <strong>Description:</strong> <code>DevOps project for BharatMart with SRE gates</code>
+   - <strong>Compartment:</strong> Select your compartment
+   - Click <strong>Create</strong></p>
+</li>
+<li>
+<p><strong>Note the Project OCID</strong> for later use.</p>
+</li>
+</ol>
+<h4 id="step-2-create-code-repository-or-connect-existing">Step 2: Create Code Repository (or Connect Existing)<a class="headerlink" href="#step-2-create-code-repository-or-connect-existing" title="Permanent link">&para;</a></h4>
+<ol>
+<li>
+<p><strong>Navigate to Code Repositories:</strong>
+   - In your DevOps project, go to <strong>Code Repositories</strong>
+   - Click <strong>Create Repository</strong></p>
+</li>
+<li>
+<p><strong>Create New Repository:</strong>
+   - <strong>Name:</strong> <code>bharatmart-app</code>
+   - <strong>Description:</strong> <code>BharatMart application repository</code>
+   - <strong>Repository Type:</strong> Mirrored (connect to external Git) or Private (OCI-hosted)
+   - Click <strong>Create</strong></p>
+</li>
+<li>
+<p><strong>Option A - Connect External Repository:</strong>
+   - If you have existing Git repository (GitHub, GitLab):</p>
+<ul>
+<li>Click <strong>Mirror Repository</strong></li>
+<li>Follow instructions to connect external repository</li>
+</ul>
+</li>
+<li>
+<p><strong>Option B - Create New Repository:</strong>
+   - Clone repository:
+     <div class="highlight"><pre><span></span><code>git<span class="w"> </span>clone<span class="w"> </span>&lt;repository-url&gt;
+<span class="nb">cd</span><span class="w"> </span>bharatmart-app
+<span class="c1"># Add your BharatMart code</span>
+git<span class="w"> </span>add<span class="w"> </span>.
+git<span class="w"> </span>commit<span class="w"> </span>-m<span class="w"> </span><span class="s2">&quot;Initial commit&quot;</span>
+git<span class="w"> </span>push
+</code></pre></div></p>
+</li>
+</ol>
+<h4 id="step-3-create-artifact-repository">Step 3: Create Artifact Repository<a class="headerlink" href="#step-3-create-artifact-repository" title="Permanent link">&para;</a></h4>
+<ol>
+<li>
+<p><strong>Navigate to Artifact Repositories:</strong>
+   - In your DevOps project, go to <strong>Artifact Repositories</strong>
+   - Click <strong>Create Repository</strong></p>
+</li>
+<li>
+<p><strong>Configure Repository:</strong>
+   - <strong>Name:</strong> <code>bharatmart-artifacts</code>
+   - <strong>Repository Type:</strong> Generic Artifacts
+   - <strong>Description:</strong> <code>Build artifacts for BharatMart</code>
+   - Click <strong>Create</strong></p>
+</li>
+</ol>
+<hr />
+<h2 id="4-hands-on-task-2-create-build-pipeline">4. Hands-On Task 2 — Create Build Pipeline<a class="headerlink" href="#4-hands-on-task-2-create-build-pipeline" title="Permanent link">&para;</a></h2>
+<h4 id="purpose_1">Purpose<a class="headerlink" href="#purpose_1" title="Permanent link">&para;</a></h4>
+<p>Create build pipeline that compiles and tests BharatMart application.</p>
+<h3 id="steps_1">Steps:<a class="headerlink" href="#steps_1" title="Permanent link">&para;</a></h3>
+<h4 id="step-1-create-build-pipeline">Step 1: Create Build Pipeline<a class="headerlink" href="#step-1-create-build-pipeline" title="Permanent link">&para;</a></h4>
+<ol>
+<li>
+<p><strong>Navigate to Build Pipelines:</strong>
+   - In your DevOps project, go to <strong>Build Pipelines</strong>
+   - Click <strong>Create Build Pipeline</strong></p>
+</li>
+<li>
+<p><strong>Configure Pipeline:</strong>
+   - <strong>Name:</strong> <code>bharatmart-build-pipeline</code>
+   - <strong>Description:</strong> <code>Build and test BharatMart application</code>
+   - Click <strong>Create</strong></p>
+</li>
+</ol>
+<h4 id="step-2-add-build-stages">Step 2: Add Build Stages<a class="headerlink" href="#step-2-add-build-stages" title="Permanent link">&para;</a></h4>
+<ol>
+<li>
+<p><strong>Add Managed Build Stage:</strong>
+   - Click <strong>Add Stage</strong>
+   - Select <strong>Managed Build</strong>
+   - <strong>Stage Name:</strong> <code>build-and-test</code></p>
+</li>
+<li>
+<p><strong>Configure Build Stage:</strong>
+   - <strong>Primary Code Repository:</strong> Select <code>bharatmart-app</code>
+   - <strong>Build Spec File Path:</strong> <code>build_spec.yaml</code> (we&rsquo;ll create this)
+   - <strong>Build Runner:</strong> Choose appropriate runner (e.g., <code>OL7_X86_64_STANDARD_10</code>)
+   - Click <strong>Add</strong></p>
+</li>
+<li>
+<p><strong>Create Build Spec File:</strong></p>
+</li>
+</ol>
+<p>Create <code>build_spec.yaml</code> in your repository:
+   <div class="highlight"><pre><span></span><code><span class="nt">version</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0.1</span>
+<span class="nt">component</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">build</span>
+<span class="nt">timeoutInSeconds</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">6000</span>
+<span class="nt">shell</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bash</span>
+
+<span class="nt">env</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">exportedVariables</span><span class="p">:</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">APP_VERSION</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">BUILD_NUMBER</span>
+
+<span class="nt">steps</span><span class="p">:</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Command</span>
+<span class="w">    </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;Install</span><span class="nv"> </span><span class="s">Dependencies&quot;</span>
+<span class="w">    </span><span class="nt">command</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">|</span>
+<span class="w">      </span><span class="no">echo &quot;Installing dependencies...&quot;</span>
+<span class="w">      </span><span class="no">npm install</span>
+
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Command</span>
+<span class="w">    </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;Run</span><span class="nv"> </span><span class="s">Tests&quot;</span>
+<span class="w">    </span><span class="nt">command</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">|</span>
+<span class="w">      </span><span class="no">echo &quot;Running tests...&quot;</span>
+<span class="w">      </span><span class="no">npm test</span>
+
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Command</span>
+<span class="w">    </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;Build</span><span class="nv"> </span><span class="s">Application&quot;</span>
+<span class="w">    </span><span class="nt">command</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">|</span>
+<span class="w">      </span><span class="no">echo &quot;Building application...&quot;</span>
+<span class="w">      </span><span class="no">npm run build</span>
+<span class="w">      </span><span class="no">export APP_VERSION=$(node -p &quot;require(&#39;./package.json&#39;).version&quot;)</span>
+<span class="w">      </span><span class="no">export BUILD_NUMBER=$OCI_BUILD_RUN_ID</span>
+
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Command</span>
+<span class="w">    </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;Create</span><span class="nv"> </span><span class="s">Artifact&quot;</span>
+<span class="w">    </span><span class="nt">command</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">|</span>
+<span class="w">      </span><span class="no">echo &quot;Creating artifact...&quot;</span>
+<span class="w">      </span><span class="no">tar -czf bharatmart-${APP_VERSION}-${BUILD_NUMBER}.tar.gz \</span>
+<span class="w">        </span><span class="no">dist/ \</span>
+<span class="w">        </span><span class="no">package.json \</span>
+<span class="w">        </span><span class="no">server/</span>
+
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Command</span>
+<span class="w">    </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;Push</span><span class="nv"> </span><span class="s">to</span><span class="nv"> </span><span class="s">Artifact</span><span class="nv"> </span><span class="s">Repository&quot;</span>
+<span class="w">    </span><span class="nt">command</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">|</span>
+<span class="w">      </span><span class="no">echo &quot;Pushing artifact...&quot;</span>
+<span class="w">      </span><span class="no">oci artifacts generic artifact put-by-path \</span>
+<span class="w">        </span><span class="no">--repository-id ${OCI_ARTIFACT_REPOSITORY_ID} \</span>
+<span class="w">        </span><span class="no">--artifact-path &quot;bharatmart-${APP_VERSION}-${BUILD_NUMBER}.tar.gz&quot; \</span>
+<span class="w">        </span><span class="no">--file-path &quot;bharatmart-${APP_VERSION}-${BUILD_NUMBER}.tar.gz&quot;</span>
+
+<span class="nt">outputArtifacts</span><span class="p">:</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bharatmart-artifact</span>
+<span class="w">    </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">GENERIC_ARTIFACT</span>
+<span class="w">    </span><span class="nt">location</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bharatmart-${APP_VERSION}-${BUILD_NUMBER}.tar.gz</span>
+</code></pre></div></p>
+<ol start="4">
+<li><strong>Commit Build Spec:</strong>
+   <div class="highlight"><pre><span></span><code>git<span class="w"> </span>add<span class="w"> </span>build_spec.yaml
+git<span class="w"> </span>commit<span class="w"> </span>-m<span class="w"> </span><span class="s2">&quot;Add build specification&quot;</span>
+git<span class="w"> </span>push
+</code></pre></div></li>
+</ol>
+<h4 id="step-3-test-build-pipeline">Step 3: Test Build Pipeline<a class="headerlink" href="#step-3-test-build-pipeline" title="Permanent link">&para;</a></h4>
+<ol>
+<li>
+<p><strong>Run Build Manually:</strong>
+   - Go to <strong>Build Pipelines</strong>
+   - Click on <code>bharatmart-build-pipeline</code>
+   - Click <strong>Start Manual Run</strong>
+   - Select branch (e.g., <code>main</code>)
+   - Click <strong>Start</strong></p>
+</li>
+<li>
+<p><strong>Monitor Build:</strong>
+   - Watch build progress in real-time
+   - Check logs for each stage
+   - Verify artifact is created</p>
+</li>
+</ol>
+<hr />
+<h2 id="5-hands-on-task-3-add-reliability-gates">5. Hands-On Task 3 — Add Reliability Gates<a class="headerlink" href="#5-hands-on-task-3-add-reliability-gates" title="Permanent link">&para;</a></h2>
+<h4 id="purpose_2">Purpose<a class="headerlink" href="#purpose_2" title="Permanent link">&para;</a></h4>
+<p>Add pre-deployment and post-deployment reliability gates.</p>
+<h3 id="steps_2">Steps:<a class="headerlink" href="#steps_2" title="Permanent link">&para;</a></h3>
+<h4 id="step-1-create-pre-deployment-gate-function">Step 1: Create Pre-Deployment Gate Function<a class="headerlink" href="#step-1-create-pre-deployment-gate-function" title="Permanent link">&para;</a></h4>
+<ol>
+<li><strong>Create OCI Function for Gate Checks:</strong></li>
+</ol>
+<p>Create function <code>pre-deployment-gate.py</code>:
+   <div class="highlight"><pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">io</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">json</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">oci</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">logging</span>
+
+<span class="n">logging</span><span class="o">.</span><span class="n">basicConfig</span><span class="p">(</span><span class="n">level</span><span class="o">=</span><span class="n">logging</span><span class="o">.</span><span class="n">INFO</span><span class="p">)</span>
+<span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">handler</span><span class="p">(</span><span class="n">ctx</span><span class="p">,</span> <span class="n">data</span><span class="p">:</span> <span class="n">io</span><span class="o">.</span><span class="n">BytesIO</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Pre-deployment reliability gate</span>
+<span class="sd">    Checks error budget and service health before deployment</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">config</span> <span class="o">=</span> <span class="p">{}</span>
+
+        <span class="c1"># Get input parameters</span>
+        <span class="k">if</span> <span class="n">data</span><span class="p">:</span>
+            <span class="n">params</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">data</span><span class="o">.</span><span class="n">read</span><span class="p">()</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="s1">&#39;utf-8&#39;</span><span class="p">))</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">params</span> <span class="o">=</span> <span class="n">ctx</span>
+
+        <span class="n">compartment_id</span> <span class="o">=</span> <span class="n">params</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;compartment_id&#39;</span><span class="p">)</span>
+        <span class="n">service_name</span> <span class="o">=</span> <span class="n">params</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;service_name&#39;</span><span class="p">,</span> <span class="s1">&#39;BharatMart&#39;</span><span class="p">)</span>
+
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Pre-deployment gate check for </span><span class="si">{</span><span class="n">service_name</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+        <span class="c1"># Create Monitoring client</span>
+        <span class="n">monitoring</span> <span class="o">=</span> <span class="n">oci</span><span class="o">.</span><span class="n">monitoring</span><span class="o">.</span><span class="n">MonitoringClient</span><span class="p">(</span><span class="n">config</span><span class="p">)</span>
+
+        <span class="c1"># Check 1: Error Budget Check</span>
+        <span class="c1"># Query error rate for last 24 hours</span>
+        <span class="c1"># (Simplified - in production, calculate actual error budget)</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Checking error budget...&quot;</span><span class="p">)</span>
+
+        <span class="c1"># Check 2: Service Health Check</span>
+        <span class="c1"># Query current error rate and latency</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Checking service health...&quot;</span><span class="p">)</span>
+
+        <span class="c1"># Example: Check if error rate is acceptable</span>
+        <span class="c1"># If error rate &gt; 1%, block deployment</span>
+        <span class="n">current_error_rate</span> <span class="o">=</span> <span class="mf">0.5</span>  <span class="c1"># Example: query actual metrics</span>
+
+        <span class="k">if</span> <span class="n">current_error_rate</span> <span class="o">&gt;</span> <span class="mf">1.0</span><span class="p">:</span>
+            <span class="k">return</span> <span class="p">{</span>
+                <span class="s2">&quot;status&quot;</span><span class="p">:</span> <span class="s2">&quot;BLOCKED&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;reason&quot;</span><span class="p">:</span> <span class="sa">f</span><span class="s2">&quot;Error rate too high: </span><span class="si">{</span><span class="n">current_error_rate</span><span class="si">}</span><span class="s2">%&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;error_budget_check&quot;</span><span class="p">:</span> <span class="s2">&quot;FAIL&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;health_check&quot;</span><span class="p">:</span> <span class="s2">&quot;FAIL&quot;</span>
+            <span class="p">}</span>
+
+        <span class="c1"># Check 3: Alarms Status</span>
+        <span class="c1"># Verify no critical alarms are firing</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Checking alarm status...&quot;</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="p">{</span>
+            <span class="s2">&quot;status&quot;</span><span class="p">:</span> <span class="s2">&quot;APPROVED&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;reason&quot;</span><span class="p">:</span> <span class="s2">&quot;All checks passed&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;error_budget_check&quot;</span><span class="p">:</span> <span class="s2">&quot;PASS&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;health_check&quot;</span><span class="p">:</span> <span class="s2">&quot;PASS&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;alarm_check&quot;</span><span class="p">:</span> <span class="s2">&quot;PASS&quot;</span>
+        <span class="p">}</span>
+
+    <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Gate check failed: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="p">{</span>
+            <span class="s2">&quot;status&quot;</span><span class="p">:</span> <span class="s2">&quot;ERROR&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;reason&quot;</span><span class="p">:</span> <span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="p">)</span>
+        <span class="p">}</span>
+</code></pre></div></p>
+<ol start="2">
+<li><strong>Deploy Function:</strong>
+   - Create function application: <code>devops-gates</code>
+   - Deploy function: <code>pre-deployment-gate</code>
+   - Note function OCID for pipeline configuration</li>
+</ol>
+<h4 id="step-2-add-gate-stage-to-deployment-pipeline">Step 2: Add Gate Stage to Deployment Pipeline<a class="headerlink" href="#step-2-add-gate-stage-to-deployment-pipeline" title="Permanent link">&para;</a></h4>
+<ol>
+<li>
+<p><strong>Create Deployment Pipeline:</strong>
+   - Go to <strong>Deployment Pipelines</strong>
+   - Click <strong>Create Deployment Pipeline</strong>
+   - <strong>Name:</strong> <code>bharatmart-deploy-pipeline</code></p>
+</li>
+<li>
+<p><strong>Add Pre-Deployment Gate Stage:</strong>
+   - Click <strong>Add Stage</strong>
+   - Select <strong>Invoke Function</strong>
+   - <strong>Stage Name:</strong> <code>pre-deployment-gate</code>
+   - <strong>Function:</strong> Select <code>pre-deployment-gate</code> function
+   - <strong>Function Parameters:</strong>
+     <div class="highlight"><pre><span></span><code><span class="p">{</span>
+<span class="w">  </span><span class="nt">&quot;compartment_id&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;&lt;compartment-ocid&gt;&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;service_name&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;BharatMart&quot;</span>
+<span class="p">}</span>
+</code></pre></div>
+   - <strong>Fail on Error:</strong> Yes
+   - Click <strong>Add</strong></p>
+</li>
+<li>
+<p><strong>Add Deployment Stage:</strong>
+   - Click <strong>Add Stage</strong>
+   - Select <strong>Compute Instance Group Deployment</strong>
+   - <strong>Stage Name:</strong> <code>deploy-to-compute</code>
+   - Configure deployment to your Compute instances
+   - Click <strong>Add</strong></p>
+</li>
+</ol>
+<h4 id="step-3-create-post-deployment-validation">Step 3: Create Post-Deployment Validation<a class="headerlink" href="#step-3-create-post-deployment-validation" title="Permanent link">&para;</a></h4>
+<ol>
+<li><strong>Create Post-Deployment Gate Function:</strong></li>
+</ol>
+<p>Create function <code>post-deployment-validation.py</code>:
+   <div class="highlight"><pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">io</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">json</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">oci</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">time</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">logging</span>
+
+<span class="n">logging</span><span class="o">.</span><span class="n">basicConfig</span><span class="p">(</span><span class="n">level</span><span class="o">=</span><span class="n">logging</span><span class="o">.</span><span class="n">INFO</span><span class="p">)</span>
+<span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">handler</span><span class="p">(</span><span class="n">ctx</span><span class="p">,</span> <span class="n">data</span><span class="p">:</span> <span class="n">io</span><span class="o">.</span><span class="n">BytesIO</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Post-deployment validation</span>
+<span class="sd">    Checks health, error rate, and latency after deployment</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">config</span> <span class="o">=</span> <span class="p">{}</span>
+
+        <span class="k">if</span> <span class="n">data</span><span class="p">:</span>
+            <span class="n">params</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">data</span><span class="o">.</span><span class="n">read</span><span class="p">()</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="s1">&#39;utf-8&#39;</span><span class="p">))</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">params</span> <span class="o">=</span> <span class="n">ctx</span>
+
+        <span class="n">health_endpoint</span> <span class="o">=</span> <span class="n">params</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;health_endpoint&#39;</span><span class="p">,</span> <span class="s1">&#39;http://&lt;lb-ip&gt;/api/health&#39;</span><span class="p">)</span>
+        <span class="n">max_wait_time</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">params</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;max_wait_time&#39;</span><span class="p">,</span> <span class="mi">300</span><span class="p">))</span>  <span class="c1"># 5 minutes</span>
+
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Post-deployment validation: </span><span class="si">{</span><span class="n">health_endpoint</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+        <span class="c1"># Wait for deployment to stabilize</span>
+        <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mi">30</span><span class="p">)</span>
+
+        <span class="c1"># Check 1: Health Endpoint</span>
+        <span class="kn">import</span><span class="w"> </span><span class="nn">requests</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">response</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">health_endpoint</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">response</span><span class="o">.</span><span class="n">status_code</span> <span class="o">!=</span> <span class="mi">200</span><span class="p">:</span>
+                <span class="k">return</span> <span class="p">{</span>
+                    <span class="s2">&quot;status&quot;</span><span class="p">:</span> <span class="s2">&quot;FAILED&quot;</span><span class="p">,</span>
+                    <span class="s2">&quot;reason&quot;</span><span class="p">:</span> <span class="sa">f</span><span class="s2">&quot;Health check failed: </span><span class="si">{</span><span class="n">response</span><span class="o">.</span><span class="n">status_code</span><span class="si">}</span><span class="s2">&quot;</span>
+                <span class="p">}</span>
+        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="k">return</span> <span class="p">{</span>
+                <span class="s2">&quot;status&quot;</span><span class="p">:</span> <span class="s2">&quot;FAILED&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;reason&quot;</span><span class="p">:</span> <span class="sa">f</span><span class="s2">&quot;Health check error: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span>
+            <span class="p">}</span>
+
+        <span class="c1"># Check 2: Error Rate (query metrics)</span>
+        <span class="c1"># In production, query OCI Monitoring for actual error rate</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Checking error rate...&quot;</span><span class="p">)</span>
+
+        <span class="c1"># Check 3: Latency (query metrics)</span>
+        <span class="c1"># In production, query OCI Monitoring for latency</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Checking latency...&quot;</span><span class="p">)</span>
+
+        <span class="c1"># Validation passed</span>
+        <span class="k">return</span> <span class="p">{</span>
+            <span class="s2">&quot;status&quot;</span><span class="p">:</span> <span class="s2">&quot;PASSED&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;health_check&quot;</span><span class="p">:</span> <span class="s2">&quot;PASS&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;error_rate_check&quot;</span><span class="p">:</span> <span class="s2">&quot;PASS&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;latency_check&quot;</span><span class="p">:</span> <span class="s2">&quot;PASS&quot;</span>
+        <span class="p">}</span>
+
+    <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Validation failed: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="p">{</span>
+            <span class="s2">&quot;status&quot;</span><span class="p">:</span> <span class="s2">&quot;FAILED&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;reason&quot;</span><span class="p">:</span> <span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="p">)</span>
+        <span class="p">}</span>
+</code></pre></div></p>
+<ol start="2">
+<li><strong>Add Post-Deployment Stage:</strong>
+   - In deployment pipeline, add <strong>Invoke Function</strong> stage
+   - <strong>Stage Name:</strong> <code>post-deployment-validation</code>
+   - <strong>Function:</strong> Select <code>post-deployment-validation</code> function
+   - <strong>Fail on Error:</strong> Yes
+   - Add after deployment stage</li>
+</ol>
+<hr />
+<h2 id="6-hands-on-task-4-configure-pipeline-triggers">6. Hands-On Task 4 — Configure Pipeline Triggers<a class="headerlink" href="#6-hands-on-task-4-configure-pipeline-triggers" title="Permanent link">&para;</a></h2>
+<h4 id="purpose_3">Purpose<a class="headerlink" href="#purpose_3" title="Permanent link">&para;</a></h4>
+<p>Set up automatic pipeline execution on code changes.</p>
+<h3 id="steps_3">Steps:<a class="headerlink" href="#steps_3" title="Permanent link">&para;</a></h3>
+<h4 id="step-1-create-build-trigger">Step 1: Create Build Trigger<a class="headerlink" href="#step-1-create-build-trigger" title="Permanent link">&para;</a></h4>
+<ol>
+<li>
+<p><strong>Navigate to Triggers:</strong>
+   - In DevOps project, go to <strong>Triggers</strong>
+   - Click <strong>Create Trigger</strong></p>
+</li>
+<li>
+<p><strong>Configure Build Trigger:</strong>
+   - <strong>Name:</strong> <code>bharatmart-build-trigger</code>
+   - <strong>Trigger Source:</strong> Code Repository
+   - <strong>Repository:</strong> Select <code>bharatmart-app</code>
+   - <strong>Events:</strong> Push to branch
+   - <strong>Branch:</strong> <code>main</code> (or your main branch)
+   - <strong>Build Pipeline:</strong> Select <code>bharatmart-build-pipeline</code>
+   - Click <strong>Create</strong></p>
+</li>
+</ol>
+<h4 id="step-2-create-deployment-trigger">Step 2: Create Deployment Trigger<a class="headerlink" href="#step-2-create-deployment-trigger" title="Permanent link">&para;</a></h4>
+<ol>
+<li><strong>Create Deployment Trigger:</strong>
+   - Click <strong>Create Trigger</strong>
+   - <strong>Name:</strong> <code>bharatmart-deploy-trigger</code>
+   - <strong>Trigger Source:</strong> Artifact
+   - <strong>Artifact:</strong> Select artifact from build pipeline
+   - <strong>Deployment Pipeline:</strong> Select <code>bharatmart-deploy-pipeline</code>
+   - Click <strong>Create</strong></li>
+</ol>
+<h4 id="step-3-test-trigger">Step 3: Test Trigger<a class="headerlink" href="#step-3-test-trigger" title="Permanent link">&para;</a></h4>
+<ol>
+<li>
+<p><strong>Make Code Change:</strong>
+   <div class="highlight"><pre><span></span><code><span class="c1"># Make a small change</span>
+<span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;# Test trigger&quot;</span><span class="w"> </span>&gt;&gt;<span class="w"> </span>README.md
+git<span class="w"> </span>add<span class="w"> </span>README.md
+git<span class="w"> </span>commit<span class="w"> </span>-m<span class="w"> </span><span class="s2">&quot;Test pipeline trigger&quot;</span>
+git<span class="w"> </span>push
+</code></pre></div></p>
+</li>
+<li>
+<p><strong>Verify Pipeline Execution:</strong>
+   - Go to <strong>Build Pipelines</strong>
+   - Verify build pipeline started automatically
+   - Monitor build progress</p>
+</li>
+</ol>
+<hr />
+<h2 id="7-hands-on-task-5-integrate-sli-validation">7. Hands-On Task 5 — Integrate SLI Validation<a class="headerlink" href="#7-hands-on-task-5-integrate-sli-validation" title="Permanent link">&para;</a></h2>
+<h4 id="purpose_4">Purpose<a class="headerlink" href="#purpose_4" title="Permanent link">&para;</a></h4>
+<p>Add explicit SLI validation to deployment pipeline.</p>
+<h3 id="steps_4">Steps:<a class="headerlink" href="#steps_4" title="Permanent link">&para;</a></h3>
+<h4 id="step-1-create-sli-validation-script">Step 1: Create SLI Validation Script<a class="headerlink" href="#step-1-create-sli-validation-script" title="Permanent link">&para;</a></h4>
+<ol>
+<li><strong>Create SLI Validation Function:</strong></li>
+</ol>
+<p>Create function <code>sli-validation.py</code>:
+   <div class="highlight"><pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">io</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">json</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">oci</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">logging</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">datetime</span><span class="w"> </span><span class="kn">import</span> <span class="n">datetime</span><span class="p">,</span> <span class="n">timedelta</span>
+
+<span class="n">logging</span><span class="o">.</span><span class="n">basicConfig</span><span class="p">(</span><span class="n">level</span><span class="o">=</span><span class="n">logging</span><span class="o">.</span><span class="n">INFO</span><span class="p">)</span>
+<span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">handler</span><span class="p">(</span><span class="n">ctx</span><span class="p">,</span> <span class="n">data</span><span class="p">:</span> <span class="n">io</span><span class="o">.</span><span class="n">BytesIO</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    SLI validation for deployment</span>
+<span class="sd">    Validates SLIs meet SLO targets</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">config</span> <span class="o">=</span> <span class="p">{}</span>
+
+        <span class="k">if</span> <span class="n">data</span><span class="p">:</span>
+            <span class="n">params</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">data</span><span class="o">.</span><span class="n">read</span><span class="p">()</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="s1">&#39;utf-8&#39;</span><span class="p">))</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">params</span> <span class="o">=</span> <span class="n">ctx</span>
+
+        <span class="n">compartment_id</span> <span class="o">=</span> <span class="n">params</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;compartment_id&#39;</span><span class="p">)</span>
+        <span class="n">slo_targets</span> <span class="o">=</span> <span class="n">params</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;slo_targets&#39;</span><span class="p">,</span> <span class="p">{</span>
+            <span class="s1">&#39;availability&#39;</span><span class="p">:</span> <span class="mf">99.9</span><span class="p">,</span>
+            <span class="s1">&#39;latency_p95&#39;</span><span class="p">:</span> <span class="mi">500</span><span class="p">,</span>  <span class="c1"># milliseconds</span>
+            <span class="s1">&#39;error_rate&#39;</span><span class="p">:</span> <span class="mf">0.1</span>  <span class="c1"># percentage</span>
+        <span class="p">})</span>
+
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Validating SLIs against SLOs...&quot;</span><span class="p">)</span>
+
+        <span class="c1"># Create Monitoring client</span>
+        <span class="n">monitoring</span> <span class="o">=</span> <span class="n">oci</span><span class="o">.</span><span class="n">monitoring</span><span class="o">.</span><span class="n">MonitoringClient</span><span class="p">(</span><span class="n">config</span><span class="p">)</span>
+
+        <span class="n">end_time</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">()</span>
+        <span class="n">start_time</span> <span class="o">=</span> <span class="n">end_time</span> <span class="o">-</span> <span class="n">timedelta</span><span class="p">(</span><span class="n">hours</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+
+        <span class="n">results</span> <span class="o">=</span> <span class="p">{}</span>
+
+        <span class="c1"># SLI 1: Availability</span>
+        <span class="c1"># Query uptime/health metrics</span>
+        <span class="c1"># Calculate availability percentage</span>
+        <span class="c1"># Compare with SLO target</span>
+
+        <span class="c1"># SLI 2: Latency</span>
+        <span class="c1"># Query latency metrics (P95)</span>
+        <span class="n">latency_p95</span> <span class="o">=</span> <span class="mi">250</span>  <span class="c1"># Example: query actual metric</span>
+        <span class="n">results</span><span class="p">[</span><span class="s1">&#39;latency&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s1">&#39;value&#39;</span><span class="p">:</span> <span class="n">latency_p95</span><span class="p">,</span>
+            <span class="s1">&#39;target&#39;</span><span class="p">:</span> <span class="n">slo_targets</span><span class="p">[</span><span class="s1">&#39;latency_p95&#39;</span><span class="p">],</span>
+            <span class="s1">&#39;pass&#39;</span><span class="p">:</span> <span class="n">latency_p95</span> <span class="o">&lt;</span> <span class="n">slo_targets</span><span class="p">[</span><span class="s1">&#39;latency_p95&#39;</span><span class="p">]</span>
+        <span class="p">}</span>
+
+        <span class="c1"># SLI 3: Error Rate</span>
+        <span class="c1"># Query error rate metrics</span>
+        <span class="n">error_rate</span> <span class="o">=</span> <span class="mf">0.05</span>  <span class="c1"># Example: query actual metric</span>
+        <span class="n">results</span><span class="p">[</span><span class="s1">&#39;error_rate&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s1">&#39;value&#39;</span><span class="p">:</span> <span class="n">error_rate</span><span class="p">,</span>
+            <span class="s1">&#39;target&#39;</span><span class="p">:</span> <span class="n">slo_targets</span><span class="p">[</span><span class="s1">&#39;error_rate&#39;</span><span class="p">],</span>
+            <span class="s1">&#39;pass&#39;</span><span class="p">:</span> <span class="n">error_rate</span> <span class="o">&lt;</span> <span class="n">slo_targets</span><span class="p">[</span><span class="s1">&#39;error_rate&#39;</span><span class="p">]</span>
+        <span class="p">}</span>
+
+        <span class="c1"># Determine overall status</span>
+        <span class="n">all_pass</span> <span class="o">=</span> <span class="nb">all</span><span class="p">(</span><span class="n">r</span><span class="p">[</span><span class="s1">&#39;pass&#39;</span><span class="p">]</span> <span class="k">for</span> <span class="n">r</span> <span class="ow">in</span> <span class="n">results</span><span class="o">.</span><span class="n">values</span><span class="p">())</span>
+
+        <span class="k">return</span> <span class="p">{</span>
+            <span class="s2">&quot;status&quot;</span><span class="p">:</span> <span class="s2">&quot;PASSED&quot;</span> <span class="k">if</span> <span class="n">all_pass</span> <span class="k">else</span> <span class="s2">&quot;FAILED&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;sli_results&quot;</span><span class="p">:</span> <span class="n">results</span><span class="p">,</span>
+            <span class="s2">&quot;timestamp&quot;</span><span class="p">:</span> <span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">()</span><span class="o">.</span><span class="n">isoformat</span><span class="p">()</span>
+        <span class="p">}</span>
+
+    <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;SLI validation failed: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="p">{</span>
+            <span class="s2">&quot;status&quot;</span><span class="p">:</span> <span class="s2">&quot;ERROR&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;reason&quot;</span><span class="p">:</span> <span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="p">)</span>
+        <span class="p">}</span>
+</code></pre></div></p>
+<ol start="2">
+<li><strong>Add SLI Validation Stage:</strong>
+   - Add to deployment pipeline as post-deployment stage
+   - Configure with SLO targets
+   - Set to fail pipeline if SLIs don&rsquo;t meet targets</li>
+</ol>
+<hr />
+<h2 id="8-summary-of-the-hands-on">8. Summary of the Hands-On<a class="headerlink" href="#8-summary-of-the-hands-on" title="Permanent link">&para;</a></h2>
+<p>In this exercise, you:</p>
+<ul>
+<li>Created OCI DevOps project and repositories</li>
+<li>Built CI/CD pipeline with build stages</li>
+<li>Added reliability gates (pre and post-deployment)</li>
+<li>Configured pipeline triggers</li>
+<li>Integrated SLI validation into deployment</li>
+<li>Implemented SRE practices in CI/CD workflow</li>
+</ul>
+<p>This demonstrates how SRE principles integrate into DevOps pipelines for reliable deployments.</p>
+<hr />
+<h2 id="9-best-practices">9. Best Practices<a class="headerlink" href="#9-best-practices" title="Permanent link">&para;</a></h2>
+<h3 id="reliability-gates">Reliability Gates:<a class="headerlink" href="#reliability-gates" title="Permanent link">&para;</a></h3>
+<ul>
+<li><strong>Always check error budget</strong> before deployment</li>
+<li><strong>Validate service health</strong> before and after deployment</li>
+<li><strong>Monitor metrics</strong> during deployment window</li>
+<li><strong>Automatic rollback</strong> on SLO breach</li>
+<li><strong>Gradual rollout</strong> (canary deployments) when possible</li>
+</ul>
+<h3 id="sli-integration">SLI Integration:<a class="headerlink" href="#sli-integration" title="Permanent link">&para;</a></h3>
+<ul>
+<li><strong>Define clear SLIs</strong> before creating gates</li>
+<li><strong>Set appropriate thresholds</strong> for validation</li>
+<li><strong>Monitor trends</strong> not just point-in-time values</li>
+<li><strong>Document SLO targets</strong> in pipeline configuration</li>
+<li><strong>Review and adjust</strong> thresholds based on historical data</li>
+</ul>
+<hr />
+<h2 id="10-troubleshooting">10. Troubleshooting<a class="headerlink" href="#10-troubleshooting" title="Permanent link">&para;</a></h2>
+<h3 id="build-pipeline-fails">Build Pipeline Fails<a class="headerlink" href="#build-pipeline-fails" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Check build logs for errors</li>
+<li>Verify build_spec.yaml syntax</li>
+<li>Ensure dependencies are available</li>
+<li>Check artifact repository permissions</li>
+</ul>
+<h3 id="deployment-blocked-by-gate">Deployment Blocked by Gate<a class="headerlink" href="#deployment-blocked-by-gate" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Review gate function logs</li>
+<li>Check error budget status</li>
+<li>Verify service health</li>
+<li>Review alarm status</li>
+</ul>
+<h3 id="sli-validation-fails">SLI Validation Fails<a class="headerlink" href="#sli-validation-fails" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Check current SLI values vs targets</li>
+<li>Review metric queries in validation function</li>
+<li>Verify SLO targets are realistic</li>
+<li>Consider adjusting thresholds if needed</li>
+</ul>
+<hr />
+<h2 id="11-solutions-key-instructor-reference">11. Solutions Key (Instructor Reference)<a class="headerlink" href="#11-solutions-key-instructor-reference" title="Permanent link">&para;</a></h2>
+<h3 id="solution-key-task-1-devops-project">✔ Solution Key — Task 1: DevOps Project<a class="headerlink" href="#solution-key-task-1-devops-project" title="Permanent link">&para;</a></h3>
+<h4 id="expected-configuration">Expected Configuration:<a class="headerlink" href="#expected-configuration" title="Permanent link">&para;</a></h4>
+<ul>
+<li>Project: <code>&lt;student-id&gt;-bharatmart-devops</code></li>
+<li>Repository: <code>bharatmart-app</code> (connected or created)</li>
+<li>Artifact Repository: <code>bharatmart-artifacts</code></li>
+</ul>
+<h3 id="solution-key-task-2-build-pipeline">✔ Solution Key — Task 2: Build Pipeline<a class="headerlink" href="#solution-key-task-2-build-pipeline" title="Permanent link">&para;</a></h3>
+<h4 id="expected-results">Expected Results:<a class="headerlink" href="#expected-results" title="Permanent link">&para;</a></h4>
+<ul>
+<li>Build pipeline created</li>
+<li>Build stages execute successfully</li>
+<li>Artifacts created and stored</li>
+</ul>
+<h3 id="solution-key-task-3-reliability-gates">✔ Solution Key — Task 3: Reliability Gates<a class="headerlink" href="#solution-key-task-3-reliability-gates" title="Permanent link">&para;</a></h3>
+<h4 id="expected-results_1">Expected Results:<a class="headerlink" href="#expected-results_1" title="Permanent link">&para;</a></h4>
+<ul>
+<li>Pre-deployment gate function created</li>
+<li>Post-deployment validation function created</li>
+<li>Gates integrated into deployment pipeline</li>
+</ul>
+<h3 id="solution-key-task-4-triggers">✔ Solution Key — Task 4: Triggers<a class="headerlink" href="#solution-key-task-4-triggers" title="Permanent link">&para;</a></h3>
+<h4 id="expected-results_2">Expected Results:<a class="headerlink" href="#expected-results_2" title="Permanent link">&para;</a></h4>
+<ul>
+<li>Build trigger fires on code push</li>
+<li>Deployment trigger fires on artifact creation</li>
+<li>Pipelines execute automatically</li>
+</ul>
+<hr />
+<h2 id="end-of-hands-on-document">End of Hands-On Document<a class="headerlink" href="#end-of-hands-on-document" title="Permanent link">&para;</a></h2>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+
+<div class="bookmark-button" onclick="toggleBookmark()">
+    <span id="bookmark-icon">☆</span>
+</div>
+
+
+              </article>
+            </div>
+          
+          
+  <script>var tabs=__md_get("__tabs");if(Array.isArray(tabs))e:for(var set of document.querySelectorAll(".tabbed-set")){var labels=set.querySelector(".tabbed-labels");for(var tab of tabs)for(var label of labels.getElementsByTagName("label"))if(label.innerText.trim()===tab){var input=document.getElementById(label.htmlFor);input.checked=!0;continue e}}</script>
+
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Back to top
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+        
+<div class="md-social">
+  
+    
+    
+    
+    
+      
+      
+    
+    <a href="https://your-site-url.com" target="_blank" rel="noopener" title="your-site-url.com" class="md-social__link">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M277.8 8.6c-12.3-11.4-31.3-11.4-43.5 0l-224 208c-9.6 9-12.8 22.9-8 35.1S18.8 272 32 272h16v176c0 35.3 28.7 64 64 64h288c35.3 0 64-28.7 64-64V272h16c13.2 0 25-8.1 29.8-20.3s1.6-26.2-8-35.1zM240 320h32c26.5 0 48 21.5 48 48v96H192v-96c0-26.5 21.5-48 48-48"/></svg>
+    </a>
+  
+    
+    
+    
+    
+      
+      
+    
+    <a href="https://github.com/your/repo" target="_blank" rel="noopener" title="github.com" class="md-social__link">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M173.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M252.8 8C114.1 8 8 113.3 8 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C436.2 457.8 504 362.9 504 252 504 113.3 391.5 8 252.8 8M105.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["navigation.instant", "navigation.sections", "navigation.expand", "navigation.top", "navigation.tracking", "navigation.indexes", "toc.follow", "content.code.copy", "content.code.annotate", "content.tabs.link", "header.autohide", "announce.dismiss"], "search": "../../assets/javascripts/workers/search.7a47a382.min.js", "tags": {"enabled": true}, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.e71a0d61.min.js"></script>
+      
+        <script src="../../js/bookmarks.js"></script>
+      
+    
+  </body>
+</html>

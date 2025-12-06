@@ -1,0 +1,9 @@
+.bookmark-button {
+    position: fixed;
+    top: 90px;
+    right: 30px;
+    font-size: 32px;
+    cursor: pointer;
+    z-index: 2000;
+    color: var(--md-primary-fg-color);
+}
