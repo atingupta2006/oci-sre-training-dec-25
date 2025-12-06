@@ -1,0 +1,81 @@
+site_name: SRE with Oracle Cloud Infrastructure
+site_description: "SRE with Oracle Cloud Infrastructure Knowledge Base"
+site_url: https://your-site-url.com      # ⬅️ Optional but recommended for sitemap/canonical URLs
+
+theme:
+  name: material
+  custom_dir: docs/overrides
+  features:
+    # Navigation
+    - navigation.instant
+    - navigation.sections
+    - navigation.expand
+    - navigation.top
+    - navigation.tracking
+    - navigation.indexes
+
+    # Table of contents
+    - toc.follow
+
+    # Code & content UX
+    - content.code.copy
+    - content.code.annotate        # ⬅️ add numbered annotations support
+    - content.tabs.link            # ⬅️ tabs linkable and shareable
+
+    # Accessibility / Quality of life
+    - header.autohide              # ⬅️ sleek UI
+    - announce.dismiss             # ⬅️ dismissible announcements banner
+
+plugins:
+  - search:
+      lang:
+        - en
+      separator: '[\\s\\-.]+'
+  - tags                           # ⬅️ for tagging pages (Material-native)
+
+markdown_extensions:
+  - extra
+  - sane_lists
+
+  # Standard Material extensions
+  - admonition
+  - attr_list
+  - md_in_html
+  - smarty
+
+  # Pymdown Extensions
+  - pymdownx.superfences
+  - pymdownx.details
+  - pymdownx.tabbed
+  - pymdownx.inlinehilite
+  - pymdownx.highlight
+  - pymdownx.keys
+  - pymdownx.mark
+  - pymdownx.arithmatex
+  - pymdownx.snippets              # ⬅️ include external snippets
+
+  # Emoji
+  - pymdownx.emoji:
+      emoji_index: !!python/name:material.extensions.emoji.twemoji
+      emoji_generator: !!python/name:material.extensions.emoji.to_svg
+
+  # Table of Contents
+  - toc:
+      permalink: true
+
+extra_javascript:
+  - js/bookmarks.js
+ 
+
+extra_css:
+  - stylesheets/bookmarks.css
+
+extra:
+  social:
+    - icon: fontawesome/solid/house
+      link: https://your-site-url.com
+    - icon: fontawesome/brands/github
+      link: https://github.com/your/repo
+
+  tags:
+    enabled: true                 # ⬅️ uses "tags" plugin

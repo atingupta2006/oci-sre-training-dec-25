@@ -1,0 +1,600 @@
+# Secure Command History & Per-User Command Logging on Ubuntu 24.04 LTS
+
+## 1. Objective
+
+Implement a robust, auditable command-logging setup on Ubuntu 24.04 LTS that:
+
+* Logs **every command** each user runs.
+* Stores logs in a **hidden directory in each user’s home**.
+* Includes **timestamp, TTY, SSH source IP, and command**.
+* Works across **SSH, multiple terminals, and duplicated sessions**.
+* Prevents users from:
+
+  * Clearing their history (`history -c`).
+  * Silently bypassing logging.
+  * Deleting command logs.
+* Mirrors all per-user logs to a **central admin-only directory**.
+
+---
+
+## 2. Prerequisites
+
+* OS: Ubuntu 24.04 LTS.
+* Shell: Bash (default on Ubuntu).
+* You have `sudo` access.
+
+We assume the default Bash configuration files:
+
+* `/etc/profile`
+* `/etc/profile.d/*.sh`
+* `/etc/bash.bashrc`
+
+are present and not heavily customized in ways that conflict with this setup.
+
+---
+
+## 3. Per-User Command Logging (User Home: `~/.command_logs`)
+
+### 3.1 Create per-user log directories
+
+```bash
+for u in /home/*; do
+  user=$(basename "$u")
+  sudo mkdir -p "/home/$user/.command_logs"
+  sudo chown "$user:$user" "/home/$user/.command_logs"
+  sudo chmod 700 "/home/$user/.command_logs"
+done
+```
+
+Each user will have:
+
+```bash
+/home/<user>/.command_logs/
+```
+
+Log file naming convention:
+
+```bash
+cmdlog-YYYY-MM-DD.log
+```
+
+---
+
+### 3.2 Configure secure history & logging: `/etc/profile.d/secure-history.sh`
+
+Create/edit the file:
+
+```bash
+sudo nano /etc/profile.d/secure-history.sh
+```
+
+Put the following **full content**:
+
+```bash
+# ----- SECURE COMMAND HISTORY SETTINGS -----
+
+# Unlimited history size (no truncation by Bash)
+export HISTSIZE=
+export HISTFILESIZE=
+
+# Always append history instead of overwriting
+shopt -s histappend
+
+# Store timestamp + TTY in history output
+export HISTTIMEFORMAT="%F %T | TTY:%l | CMD: "
+
+# Do not ignore duplicates or commands starting with space
+export HISTCONTROL=
+
+# Per-user command log directory and file
+log_dir="$HOME/.command_logs"
+log_file="$log_dir/cmdlog-$(date +%F).log"
+
+# Ensure directory exists
+mkdir -p "$log_dir"
+
+# Function to log each command
+command_logger() {
+  # Append current in-memory history to the history file
+  history -a
+
+  # Extract the last command from history, strip line number and HISTTIMEFORMAT prefix
+  local last_cmd
+  last_cmd=$(history 1 \
+    | sed 's/^[ ]*[0-9]\+[ ]*//' \
+    | sed 's/^[0-9-]\+ [0-9:]\+ | TTY:[^|]* | CMD: //')
+
+  local ttys remote_ip
+  ttys=$(tty)
+  remote_ip=$(echo "$SSH_CONNECTION" | awk '{print $1}')
+
+  echo "$(date '+%F %T') | USER:$USER | TTY:$ttys | SSH_IP:$remote_ip | CMD:$last_cmd" >> "$log_file"
+}
+
+# Run command_logger before each prompt
+PROMPT_COMMAND=command_logger
+
+# Protect the logging mechanism from being overridden
+readonly PROMPT_COMMAND
+readonly -f command_logger
+```
+
+Save and exit.
+
+### 3.3 Ensure secure-history is loaded for every interactive shell
+
+Ubuntu’s `/etc/profile.d/*.sh` is not always loaded for non-login shells. To guarantee loading, source it from `/etc/bash.bashrc`.
+
+Edit:
+
+```bash
+sudo nano /etc/bash.bashrc
+```
+
+At the **end of the file**, add:
+
+```bash
+# Load secure command history and logging for all interactive shells
+source /etc/profile.d/secure-history.sh
+```
+
+Save and exit.
+
+### 3.4 Verify syntax
+
+```bash
+bash -n /etc/profile.d/secure-history.sh
+```
+
+No output = syntax is OK.
+
+---
+
+### 3.5 Test command logging
+
+Start a fresh shell:
+
+```bash
+exec bash
+```
+
+Run a few commands:
+
+```bash
+echo test
+ls
+```
+
+Check the per-user log:
+
+```bash
+ls -l ~/.command_logs/
+cat ~/.command_logs/cmdlog-$(date +%F).log
+```
+
+You should see entries like:
+
+```text
+2025-12-06 04:48:01 | USER:adminuser | TTY:/dev/pts/0 | SSH_IP:49.36.181.101 | CMD:echo test
+2025-12-06 04:48:03 | USER:adminuser | TTY:/dev/pts/0 | SSH_IP:49.36.181.101 | CMD:ls
+```
+
+At this stage, **per-user logging is working**.
+
+---
+
+## 4. Prevent Users from Clearing History (A)
+
+Goals:
+
+* Block `history -c`, `history -w`, and `history -d` from normal users.
+* Prevent users from silently wiping shell history.
+
+### 4.1 Create a history hardening wrapper
+
+Create a new profile script:
+
+```bash
+sudo nano /etc/profile.d/history-hardening.sh
+```
+
+Content:
+
+```bash
+# ----- HISTORY HARDENING: BLOCK HISTORY CLEAR/WIPE -----
+
+history() {
+  case " $* " in
+    *" -c "*|*" -w "*|*" -d * )
+      echo "[POLICY] History modification/clear is disabled on this system." >&2
+      return 1
+      ;;
+  esac
+
+  # Delegate to the real builtin history
+  builtin history "$@"
+}
+```
+
+Save and exit.
+
+This function shadows the builtin `history` and blocks destructive options while allowing normal usage (`history`, `history 50`, etc.).
+
+### 4.2 (Optional) Protect `~/.bash_history` from deletion
+
+Make existing user history files append-only:
+
+```bash
+for u in /home/*; do
+  if [ -f "$u/.bash_history" ]; then
+    sudo chattr +a "$u/.bash_history"
+  fi
+done
+```
+
+Notes:
+
+* `+a` makes the file **append-only**.
+* Users cannot delete or truncate `.bash_history`.
+* Bash can still append to the file normally.
+
+---
+
+## 5. Prevent Users from Modifying PROMPT_COMMAND (B)
+
+We already added protection directly inside `/etc/profile.d/secure-history.sh`:
+
+```bash
+PROMPT_COMMAND=command_logger
+readonly PROMPT_COMMAND
+readonly -f command_logger
+```
+
+Effects:
+
+* Users **cannot change** `PROMPT_COMMAND` in their shell:
+
+  * `PROMPT_COMMAND=""` → fails with readonly error.
+* Users **cannot override** the `command_logger` function.
+* The logging hook is stable and cannot be suppressed from a normal shell.
+
+If the user tries:
+
+```bash
+PROMPT_COMMAND=
+```
+
+They will see an error similar to:
+
+```text
+bash: PROMPT_COMMAND: readonly variable
+```
+
+This ensures commands remain logged.
+
+---
+
+## 6. Mirror All User Logs to a Central Admin Directory (E)
+
+Goal: keep a **root-owned mirror** of all user command logs for auditing and backup, without exposing individual user home directories.
+
+### 6.1 Create central mirror directory
+
+```bash
+sudo mkdir -p /var/log/user-cmds
+sudo chown root:adm /var/log/user-cmds
+sudo chmod 750 /var/log/user-cmds
+```
+
+This gives:
+
+* Full access to `root`.
+* Group `adm` can read.
+* Normal users cannot access.
+
+### 6.2 Create the mirroring script
+
+Create the script:
+
+```bash
+sudo nano /usr/local/sbin/mirror-command-logs.sh
+```
+
+Content:
+
+```bash
+#!/bin/bash
+
+SRC_BASE="/home"
+DST_BASE="/var/log/user-cmds"
+
+for home in "$SRC_BASE"/*; do
+  user=$(basename "$home")
+
+  # Skip if not a directory
+  [ -d "$home" ] || continue
+  [ -d "$home/.command_logs" ] || continue
+
+  mkdir -p "$DST_BASE/$user"
+
+  for f in "$home"/.command_logs/cmdlog-*.log; do
+    [ -f "$f" ] || continue
+
+    dest="$DST_BASE/$user/$(basename "$f")"
+
+    # Copy only if new or updated
+    if [ ! -f "$dest" ] || [ "$f" -nt "$dest" ]; then
+      cp "$f" "$dest"
+      chown root:adm "$dest"
+      chmod 640 "$dest"
+    fi
+  done
+done
+```
+
+Save and exit, then make executable:
+
+```bash
+sudo chmod +x /usr/local/sbin/mirror-command-logs.sh
+```
+
+### 6.3 Schedule mirroring via cron
+
+Edit root’s crontab:
+
+```bash
+sudo crontab -e
+```
+
+Add the line:
+
+```cron
+*/5 * * * * /usr/local/sbin/mirror-command-logs.sh
+```
+
+This:
+
+* Runs every 5 minutes.
+* Mirrors all users’ command logs to `/var/log/user-cmds/<user>/cmdlog-YYYY-MM-DD.log`.
+* Ensures central logs are root-owned and not user-modifiable.
+
+Example mirrored layout:
+
+```bash
+/var/log/user-cmds/
+  adminuser/
+    cmdlog-2025-12-06.log
+  u01/
+    cmdlog-2025-12-06.log
+  u02/
+    cmdlog-2025-12-06.log
+```
+
+---
+
+## 7. Re-Applying Append-Only Protection to Logs
+
+Once you are satisfied with format and correctness, re-enable append-only protection for user log files:
+
+```bash
+sudo find /home -type f -path "*/.command_logs/cmdlog-*.log" -exec chattr +a {} \;
+```
+
+To verify:
+
+```bash
+lsattr /home/*/.command_logs/cmdlog-*.log
+```
+
+You should see the `a` attribute:
+
+```text
+-----a-------- /home/adminuser/.command_logs/cmdlog-2025-12-06.log
+```
+
+If you ever need to delete or reset a log file:
+
+```bash
+sudo chattr -a /home/<user>/.command_logs/cmdlog-YYYY-MM-DD.log
+sudo rm /home/<user>/.command_logs/cmdlog-YYYY-MM-DD.log
+```
+
+Then allow logging to recreate it on next command.
+
+---
+
+## 8. Verification Checklist
+
+For each test user (including `adminuser`):
+
+1. **Open a new shell** (SSH or terminal):
+
+   ```bash
+   exec bash
+   ```
+
+2. **Run commands**:
+
+   ```bash
+   echo test1
+   ls
+   pwd
+   ```
+
+3. **Check per-user log**:
+
+   ```bash
+   cat ~/.command_logs/cmdlog-$(date +%F).log
+   ```
+
+   Confirm:
+
+   * Timestamps are correct.
+   * `USER` field matches the username.
+   * `TTY` matches `tty` output.
+   * `SSH_IP` is populated for SSH sessions.
+   * `CMD` matches executed commands.
+
+4. **Try to clear history**:
+
+   ```bash
+   history -c
+   ```
+
+   Expected:
+
+   ```text
+   [POLICY] History modification/clear is disabled on this system.
+   ```
+
+5. **Try to modify PROMPT_COMMAND**:
+
+   ```bash
+   PROMPT_COMMAND=
+   ```
+
+   Expected error (readonly).
+
+6. **Check central mirror** (as root):
+
+   ```bash
+   sudo ls -R /var/log/user-cmds
+   ```
+
+   Confirm per-user mirrored logs exist and are owned by `root:adm`.
+
+---
+
+## 9. Troubleshooting
+
+### 9.1 No log file created in `~/.command_logs`
+
+Check:
+
+1. Is the secure-history script syntactically valid?
+
+   ```bash
+   bash -n /etc/profile.d/secure-history.sh
+   ```
+
+2. Is it being sourced from `/etc/bash.bashrc`?
+
+   * Ensure the following line exists at the bottom of `/etc/bash.bashrc`:
+
+     ```bash
+     source /etc/profile.d/secure-history.sh
+     ```
+
+3. Is the shell interactive?
+
+   * `/etc/bash.bashrc` has guard:
+
+     ```bash
+     [ -z "$PS1" ] && return
+     ```
+
+     So non-interactive shells will not set logging (expected).
+
+4. Check `PROMPT_COMMAND` in a shell:
+
+   ```bash
+   echo "$PROMPT_COMMAND"
+   ```
+
+   Expected: `command_logger`
+
+### 9.2 Users still manage to clear history
+
+* Confirm that `/etc/profile.d/history-hardening.sh` exists and contains the wrapper.
+* Confirm it is readable and executable by all users.
+* In the user shell, run:
+
+  ```bash
+  type history
+  ```
+
+  You should see the function definition from `history-hardening.sh`, not only `history is a shell builtin`.
+
+### 9.3 Central mirror does not update
+
+* Check cron for root:
+
+  ```bash
+  sudo crontab -l
+  ```
+
+* Run the mirror script manually and watch for errors:
+
+  ```bash
+  sudo /usr/local/sbin/mirror-command-logs.sh
+  ```
+
+* Check permissions:
+
+  ```bash
+  ls -ld /var/log/user-cmds
+  ```
+
+### 9.4 Conflicts with other PROMPT_COMMAND uses
+
+If other components also set `PROMPT_COMMAND`, consider integrating them into the `command_logger` function instead of setting `PROMPT_COMMAND` elsewhere.
+
+Example: if you previously used PROMPT_COMMAND to update the terminal title, add that logic inside `command_logger`.
+
+---
+
+## 10. Rollback / Uninstall
+
+To completely remove this setup:
+
+1. Remove or comment out the `source` line in `/etc/bash.bashrc`:
+
+   ```bash
+   # source /etc/profile.d/secure-history.sh
+   ```
+
+2. Remove the profile scripts:
+
+   ```bash
+   sudo rm -f /etc/profile.d/secure-history.sh
+   sudo rm -f /etc/profile.d/history-hardening.sh
+   ```
+
+3. Remove mirroring script and directory (optional):
+
+   ```bash
+   sudo rm -f /usr/local/sbin/mirror-command-logs.sh
+   sudo rm -rf /var/log/user-cmds
+   ```
+
+4. Remove append-only flags from logs and history files (if applied):
+
+   ```bash
+   sudo find /home -type f -path "*/.command_logs/cmdlog-*.log" -exec chattr -a {} \;
+   sudo find /home -type f -name ".bash_history" -exec chattr -a {} \;
+   ```
+
+5. Optionally remove per-user log directories:
+
+   ```bash
+   for u in /home/*; do
+     sudo rm -rf "$u/.command_logs"
+   done
+   ```
+
+After rollback, users will return to normal Bash history behavior.
+
+---
+
+## 11. Notes for Training / Documentation Use
+
+* Emphasize to learners that this setup is **for security and auditability**, not for spying.
+* Make it clear that:
+
+  * Every command is logged.
+  * Attempts to bypass logging (clearing history, changing PROMPT_COMMAND) are blocked and themselves visible in logs.
+* For multi-user lab or training environments, this setup is ideal for:
+
+  * Reconstructing user activity for troubleshooting.
+  * Verifying lab step completion.
+  * Demonstrating real-world auditing practices in Linux administration and SRE contexts.

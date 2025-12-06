@@ -1,0 +1,10 @@
+{% extends "base.html" %}
+
+{% block content %}
+{{ super() }}
+
+<div class="bookmark-button" onclick="toggleBookmark()">
+    <span id="bookmark-icon">☆</span>
+</div>
+
+{% endblock %}
