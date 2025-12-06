@@ -1,184 +1,165 @@
-Here is your **fully updated, clean, minimal, and accurate Terraform Deployment Runbook**, **rewritten to match your NEW infrastructure**, which now includes:
+# 🚀 **BharatMart Terraform Deployment – Oracle Cloud Infrastructure (OCI)**
 
-✔ **Frontend VM Tier + Frontend LB**
-✔ **Backend VM Tier + Backend LB**
-✔ **Optional backend public IP**
-✔ **All updated OCI CLI discovery commands**
-✔ **Updated diagram**
-✔ **Updated outputs & variables**
-✔ **Simplified, production-ready workflow**
+This guide explains how to:
 
-Everything is aligned with the **latest Terraform architecture** we designed.
+1. Fetch **all required OCI IDs** using OCI CLI
+2. Configure Terraform automatically
+3. Deploy the BharatMart infrastructure
+4. Manage terraform.tfvars using **sed**, **cp**, and CLI automation
 
 ---
 
-# 🚀 **OCI Terraform Deployment Runbook – Updated for Frontend + Backend Architecture**
+# 📦 **1. Prerequisites**
 
-**Environment:** Ubuntu 24.04
-**Infra Components:** VCN, Subnets, IGW, NAT, Public LB, Private LB, Frontend VM, Backend VM, SSH, Optional Public IP
+## ✔ Install OCI CLI
+
+Linux / macOS:
+
+```bash
+bash -c "$(curl -L https://raw.githubusercontent.com/oracle/oci-cli/master/scripts/install/install.sh)"
+```
+
+Verify:
+
+```bash
+oci --version
+```
 
 ---
 
-# =========================================================
+# 🔐 **2. Authenticate with OCI**
 
-# **1. Prerequisites**
+Run:
 
-# =========================================================
+```bash
+oci setup config
+```
 
-### ✔ Validate OCI CLI
+This creates:
+
+```
+~/.oci/config
+```
+
+To verify authentication:
 
 ```bash
 oci iam region list
 ```
 
-### ✔ Validate Terraform
+---
+
+# 📥 **3. Fetch Required OCI Values for terraform.tfvars**
+
+Below are all mandatory variables for your Terraform project and the commands to retrieve them.
+
+---
+
+## 🎯 **3.1 Get Tenancy OCID**
 
 ```bash
-terraform --version
+grep tenancy ~/.oci/config | awk -F'=' '{print $2}' | tr -d ' '
 ```
 
 ---
 
-# =========================================================
-
-# **2. Discover Required Terraform Variables (OCI CLI)**
-
-# =========================================================
-
-## **2.1 Get Compartment OCID**
+## 🎯 **3.2 Get User OCID**
 
 ```bash
-oci iam compartment list --all \
-  --query "data[].{name:name, id:id}" --output table
-```
-
-Filter by name:
-
-```bash
-oci iam compartment list --all \
-  --query "data[?name=='sre-lab-compartment'].id | [0]" --raw-output
-```
-
-Set variable:
-
-```bash
-COMPARTMENT_ID="<ocid>"
+oci iam user list --all \
+  --query "data[?name=='$(whoami)'].id | [0]" \
+  --raw-output
 ```
 
 ---
 
-## **2.2 Get Oracle Linux Image ID (ARM / A1 Flex)**
+## 🎯 **3.3 Get Compartment OCID**
+
+List all compartments:
+
+```bash
+oci iam compartment list --all \
+  --query "data[].{Name:name,ID:id}" \
+  --output table
+```
+
+Find the correct compartment and set:
+
+```bash
+COMPARTMENT_ID="<paste_here>"
+```
+
+---
+
+## 🎯 **3.4 Get Latest Oracle Linux ARM Image ID**
+
+Required for A1 Flex:
 
 ```bash
 oci compute image list \
   --compartment-id $COMPARTMENT_ID \
+  --all \
   --operating-system "Oracle Linux" \
   --operating-system-version "8" \
-  --query "data[].{name:\"display-name\", id:id}" --output table
-```
-
-Pick ARM image and save:
-
-```bash
-IMAGE_ID="ocid1.image.oc1.ap-mumbai-1.xxxxx"
-```
-
-Confirm:
-
-```bash
-oci compute image get --image-id $IMAGE_ID
+  --shape "VM.Standard.A1.Flex" \
+  --query "data[0].id" --raw-output
 ```
 
 ---
 
-## **2.3 Get Supported Shapes for This Image**
+# 🌐 **4. Prepare terraform.tfvars Automatically**
+
+Your project contains `terraform.tfvars.example`.
+
+## ✔ 4.1 Create terraform.tfvars
 
 ```bash
-oci compute image-shape-compatibility-entry list \
-  --image-id $IMAGE_ID \
-  --query "data[].shape" --raw-output | sort -u
-```
-
-Use recommended:
-
-```
-VM.Standard.A1.Flex
+cp terraform.tfvars.example terraform.tfvars
 ```
 
 ---
 
-## **2.4 Get Availability Domains**
+## ✔ 4.2 Use sed to auto-fill values
+
+### **Set Compartment ID**
 
 ```bash
-oci iam availability-domain list \
+sed -i "s|compartment_id = .*|compartment_id = \"$COMPARTMENT_ID\"|g" terraform.tfvars
+```
+
+### **Set Tenancy OCID**
+
+```bash
+TENANCY_OCID=$(grep tenancy ~/.oci/config | awk -F'=' '{print $2}' | tr -d ' ')
+sed -i "s|tenancy_ocid = .*|tenancy_ocid = \"$TENANCY_OCID\"|g" terraform.tfvars
+```
+
+### **Set Image ID**
+
+```bash
+IMAGE_ID=$(oci compute image list \
   --compartment-id $COMPARTMENT_ID \
-  --query "data[].name" --raw-output
+  --all \
+  --operating-system "Oracle Linux" \
+  --operating-system-version "8" \
+  --shape "VM.Standard.A1.Flex" \
+  --query "data[0].id" --raw-output)
+
+sed -i "s|image_id = .*|image_id = \"$IMAGE_ID\"|g" terraform.tfvars
 ```
 
----
-
-## **2.5 Get Your SSH Public Key**
+### **Set SSH Public Key**
 
 ```bash
-cat ~/.ssh/id_rsa.pub
-```
-
-Copy to terraform.tfvars.
-
----
-
-# =========================================================
-
-# **3. Update terraform.tfvars**
-
-# =========================================================
-
-Your file should now include:
-
-```hcl
-compartment_id = "<OCID>"
-image_id       = "<IMAGE_ID>"
-ssh_public_key = "ssh-rsa AAAA..."
-compute_instance_shape = "VM.Standard.A1.Flex"
-
-# New variables
-backend_public_ip = false
-frontend_instance_count = 1
-backend_instance_count  = 1
+SSH_KEY=$(cat ~/.ssh/id_rsa.pub)
+sed -i "s|ssh_public_key = .*|ssh_public_key = \"$SSH_KEY\"|g" terraform.tfvars
 ```
 
 ---
 
-# =========================================================
+# 🏗 **5. Deploy the Terraform Project**
 
-# **4. Move to Terraform Directory**
-
-# =========================================================
-
-```bash
-cd ~/oci-multi-tier-web-app-ecommerce/deployment/terraform
-```
-
----
-
-# =========================================================
-
-# **5. Format + Validate**
-
-# =========================================================
-
-```bash
-terraform fmt
-terraform validate
-```
-
----
-
-# =========================================================
-
-# **6. Initialize Terraform**
-
-# =========================================================
+## ✔ Initialize
 
 ```bash
 terraform init
@@ -186,201 +167,96 @@ terraform init
 
 ---
 
-# =========================================================
-
-# **7. Review Terraform Plan**
-
-# =========================================================
+## ✔ Validate
 
 ```bash
-terraform plan
-```
-
-You should see:
-
-* VCN
-* Public Subnet (frontend + LB)
-* Private Subnet (backend + LB)
-* IGW / NAT
-* Frontend LB → Frontend VM(s)
-* Backend LB → Backend VM(s)
-* Optional backend public IP
-
----
-
-# =========================================================
-
-# **8. Apply Deployment**
-
-# =========================================================
-
-```bash
-terraform apply
-```
-
-Approve:
-
-```
-yes
+terraform validate
 ```
 
 ---
 
-# =========================================================
+## ✔ Plan
 
-# **9. Retrieve Outputs**
+```bash
+terraform plan -out plan.out
+```
 
-# =========================================================
+---
+
+## ✔ Apply
+
+```bash
+terraform apply plan.out
+```
+
+Expected deployment time: **5–10 minutes**
+
+---
+
+# 🌐 **6. After Deployment**
+
+Get outputs:
 
 ```bash
 terraform output
 ```
 
-Common outputs:
+Typical:
 
-```bash
-terraform output -raw frontend_lb_url
-terraform output -raw backend_lb_private_url
-terraform output -raw frontend_public_ips
-terraform output -raw backend_private_ips
 ```
-
-If backend public IP enabled:
-
-```bash
-terraform output -raw backend_public_ips
+frontend_public_ips = ["132.xxx.xxx.xxx"]
+backend_private_ips = ["10.0.2.10"]
+load_balancer_public_ip = "129.xx.xx.xx"
 ```
 
 ---
 
-# =========================================================
-
-# **10. SSH Access**
-
-# =========================================================
-
-### Frontend VM (public IP)
-
-```bash
-ssh -i ~/.ssh/id_rsa opc@$(terraform output -raw frontend_public_ips)
-```
-
-### Backend VM (if backend_public_ip=true)
-
-```bash
-ssh -i ~/.ssh/id_rsa opc@$(terraform output -raw backend_public_ips)
-```
-
-Otherwise you need VPN/Bastion.
-
----
-
-# =========================================================
-
-# **11. Destroy Infrastructure**
-
-# =========================================================
+# 🧹 **7. Destroy Infrastructure**
 
 ```bash
 terraform destroy
 ```
 
-Approve:
-
-```
-yes
-```
-
 ---
 
-# =========================================================
+# 🛠 **8. Optional: Automate Entire Setup**
 
-# **12. Troubleshooting**
-
-# =========================================================
-
-### ❌ 401 Authentication Errors
-
-Use UNENCRYPTED OCI API key:
-
-```
-~/.oci/oci_api_key_unencrypted.pem
-```
-
-### ❌ Shape Not Valid
+Create `setup.sh`:
 
 ```bash
-oci compute image-shape-compatibility-entry list --image-id $IMAGE_ID
+#!/bin/bash
+
+cp terraform.tfvars.example terraform.tfvars
+
+COMPARTMENT_ID="<your_compartment>"
+TENANCY_OCID=$(grep tenancy ~/.oci/config | awk -F'=' '{print $2}' | tr -d ' ')
+IMAGE_ID=$(oci compute image list \
+  --compartment-id $COMPARTMENT_ID \
+  --shape "VM.Standard.A1.Flex" \
+  --operating-system "Oracle Linux" \
+  --operating-system-version "8" \
+  --query "data[0].id" --raw-output)
+
+SSH_KEY=$(cat ~/.ssh/id_rsa.pub)
+
+sed -i "s|compartment_id = .*|compartment_id = \"$COMPARTMENT_ID\"|" terraform.tfvars
+sed -i "s|tenancy_ocid = .*|tenancy_ocid = \"$TENANCY_OCID\"|" terraform.tfvars
+sed -i "s|image_id = .*|image_id = \"$IMAGE_ID\"|" terraform.tfvars
+sed -i "s|ssh_public_key = .*|ssh_public_key = \"$SSH_KEY\"|" terraform.tfvars
+
+terraform init
+terraform apply -auto-approve
 ```
 
-### ❌ SSH Not Working
+Make executable:
 
-Ensure public subnet allows inbound 22:
-
-```hcl
-ingress_security_rules {
-  protocol = "6"
-  source = "0.0.0.0/0"
-  tcp_options { min = 22, max = 22 }
-}
+```bash
+chmod +x setup.sh
 ```
 
-### ❌ Backend not reachable
+Run:
 
-Backend runs behind private LB → **no direct public access** unless enabled.
-
----
-
-# =========================================================
-
-# **13. Updated Deployment Diagram (Frontend + Backend + Dual LB)**
-
-# =========================================================
-
-```
-                            +-----------------------------+
-                            |      OCI Region: Mumbai     |
-                            +-----------------------------+
-                                        |
-                                        |
-                       +----------------------------------------+
-                       |      Virtual Cloud Network (VCN)        |
-                       |             10.0.0.0/16                 |
-                       +----------------------------------------+
-                     /                                            \
-                    /                                              \
-+--------------------------------+          +--------------------------------+
-|        Public Subnet          |          |        Private Subnet          |
-|        10.0.1.0/24            |          |        10.0.2.0/24             |
-+--------------------------------+          +--------------------------------+
-          |      |                                  |        |
-          |      |                                  |        |
-+-----------------------------+       +-------------------------------+
-| Frontend Load Balancer      |       | Backend Load Balancer (Private) |
-| Listener: 80                |       | Listener: 3000                  |
-+-------------+---------------+       +-------------+------------------+
-              |                                 |
-     +--------+--------+          +--------------+--------------+
-     | Frontend VM(s) |          |         Backend VM(s)        |
-     | React/Angular  |          | Node.js API (port 3000)      |
-     | Public IP(s)   |          | Private IP(s), NAT outbound   |
-     +----------------+          +-------------------------------+
-              |                                 |
-              |                                 |
-     +--------------+                 +----------------+
-     | Internet GW  |                 | NAT Gateway    |
-     +--------------+                 +----------------+
+```bash
+./setup.sh
 ```
 
----
-
-# ✅ **Runbook Updated — Fully aligned with your new Terraform architecture**
-
-If you want, I can also:
-
-✅ Convert this to **PDF**, **Markdown README**, or **Confluence version**
-✅ Generate a **draw.io (XML) diagram**
-✅ Create **Terraform modules** for frontend/backend/network
-✅ Add **Autonomous DB / Redis / Object Storage**
-
-Would you like any of those?
