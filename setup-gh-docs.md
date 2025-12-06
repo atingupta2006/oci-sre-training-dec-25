@@ -4,7 +4,7 @@ cd ~
 git clone https://github.com/atingupta2006/oci-sre-training-dec-25
 cd "oci-sre-training-dec-25"
 python -m venv ~/venv
-source ../venv/Scripts/activate
+source ~/venv/Scripts/activate
 pip install -r requirements.txt
 mkdocs new .
 mkdocs  build
