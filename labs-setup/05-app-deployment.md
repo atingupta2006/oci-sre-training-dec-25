@@ -27,6 +27,12 @@ Handles:
 
 ## **1.1 SSH into Frontend VM**
 
+```
+scp -i ~/.ssh/id_rsa /home/adminuser/.ssh/id_rsa opc@141.148.217.172:~/.ssh
+scp -i ~/.ssh/id_rsa /home/adminuser/.ssh/id_rsa.pub opc@141.148.217.172:~/.ssh
+```
+
+
 ```bash
 ssh -i ~/.ssh/id_rsa opc@141.148.217.172
 ```
