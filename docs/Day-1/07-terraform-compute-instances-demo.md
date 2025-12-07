@@ -63,7 +63,7 @@ Demonstrate how to provision OCI Compute instances and supporting infrastructure
 #### Step 2: Upload Terraform Configuration
 
 1. Select **Zip file** as configuration source
-2. Upload prepared Terraform zip file (BharatMart infrastructure template)
+2. Upload prepared Terraform zip file (BharatMart infrastructure template available in the [application repository](https://github.com/atingupta2006/oci-multi-tier-web-app-ecommerce/tree/main/deployment/terraform))
 3. Click **Next**
 
 #### Step 3: Configure Stack Variables

@@ -12,7 +12,7 @@ This is an instructor-led demonstration. Students observe infrastructure provisi
 
 **Assumed Context:**
 * **Instructor** has OCI tenancy with appropriate permissions
-* **Terraform template** available (BharatMart infrastructure template in `deployment/terraform/`)
+* **Terraform template** available (BharatMart infrastructure template in [application repository](https://github.com/atingupta2006/oci-multi-tier-web-app-ecommerce/tree/main/deployment/terraform))
 * **OCI Resource Manager** access available
 
 ---
@@ -81,7 +81,7 @@ Demonstrate or describe how long manual provisioning takes:
 #### Step 3: Upload Terraform Configuration
 
 1. Select **Zip file** as configuration source
-2. Upload prepared Terraform zip file (BharatMart infrastructure template from `deployment/terraform/`)
+2. Upload prepared Terraform zip file (BharatMart infrastructure template available in the [application repository](https://github.com/atingupta2006/oci-multi-tier-web-app-ecommerce/tree/main/deployment/terraform))
 3. Click **Next**
 
 ---
@@ -217,14 +217,14 @@ Show that the same stack can be used to create identical infrastructure in a dif
 
 ## 7. Terraform Template Reference
 
-The BharatMart infrastructure Terraform template is available at `deployment/terraform/` and includes:
+The BharatMart infrastructure Terraform template is available in the [application repository](https://github.com/atingupta2006/oci-multi-tier-web-app-ecommerce/tree/main/deployment/terraform) and includes:
 
 * **Complete infrastructure:** VCN, Subnets, Gateways, Security Lists, Compute instances, Load Balancer
 * **Version-specified:** Terraform >= 1.5.0, OCI Provider ~> 5.0
 * **Fully parameterized:** All configurations use input variables
 * **Production-ready:** Includes Load Balancer, health checks, proper security rules
 
-For detailed usage, see `deployment/terraform/README.md`.
+For detailed usage, see the [Terraform README](https://github.com/atingupta2006/oci-multi-tier-web-app-ecommerce/tree/main/deployment/terraform) in the application repository.
 
 ---
 
