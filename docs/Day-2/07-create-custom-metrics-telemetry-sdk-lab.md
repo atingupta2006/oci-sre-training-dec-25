@@ -74,7 +74,28 @@ Create a Python script that reads BharatMart metrics and posts them to OCI Monit
 
 ### Steps:
 
+> **📝 Note: Repository Script Available**
+> 
+> A complete, production-ready version of this script is available in the application repository at `scripts/oci-telemetry-metrics-ingestion.py` with additional features like:
+> - Command-line argument parsing (`--compartment-id`, `--metrics-endpoint`, etc.)
+> - Enhanced error handling and logging
+> - Environment variable support
+> - Better Prometheus metric parsing
+> 
+> You can use the repository script directly, or follow the steps below to create your own version (recommended for learning).
+> 
+> **To use the repository script:**
+> ```bash
+> export OCI_COMPARTMENT_ID=ocid1.compartment.oc1...
+> export METRICS_ENDPOINT=http://localhost:3000/metrics
+> python3 scripts/oci-telemetry-metrics-ingestion.py
+> ```
+> 
+> See `scripts/oci-telemetry-metrics-ingestion.py` for full documentation.
+
 1. **Create metrics ingestion script:**
+
+   Create your own script to learn the implementation details:
    ```bash
    cat > ~/bharatmart-metrics-to-oci.py << 'EOF'
    #!/usr/bin/env python3

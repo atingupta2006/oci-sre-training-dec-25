@@ -79,6 +79,15 @@ Create a function that automates a repetitive operational task.
    - Choose **Cloud Shell** or **Local Development** approach
    - Follow prompts to create function
 
+> **📝 Note: Repository Function Example Available**
+> 
+> A complete health check function example is available in the application repository:
+> - **Location:** `scripts/oci-functions/health-check-function/`
+> - **Files:** `func.py`, `func.yaml`, `requirements.txt`
+> - **Documentation:** See `scripts/oci-functions/README.md`
+> 
+> You can use this example as a starting point, or follow the steps below to create your own.
+
 **Example Function (Python) - Automated Health Check:**
 ```python
 import io

@@ -140,6 +140,16 @@ Create an OCI Function that will receive alarm events and perform automated inci
    - Choose **Python 3.9** runtime
    - Name: `incident-response-handler`
 
+> **📝 Note: Repository Function Example Available**
+> 
+> A complete incident response function example is available in the application repository:
+> - **Location:** `scripts/oci-service-connector-hub/incident-response-function/`
+> - **Files:** `func.py`, `func.yaml`, `requirements.txt`
+> - **Features:** Enhanced error handling, ONS notification integration, logging
+> - **Documentation:** See `scripts/oci-service-connector-hub/README.md`
+> 
+> You can use this example as a starting point, or follow the steps below to create your own.
+
 3. **Create Function Code:**
 
    Create `func.py`:
@@ -275,6 +285,21 @@ Create an OCI Function that will receive alarm events and perform automated inci
 #### Purpose
 
 Create a Service Connector that routes monitoring alarms to the incident response function.
+
+> **📝 Note: Infrastructure as Code Option Available**
+> 
+> You can also create the Service Connector using Terraform (Infrastructure as Code). The application repository includes a Terraform example:
+> - **Location:** `scripts/oci-service-connector-hub/service-connector-terraform.tf`
+> - **Configuration:** Complete Service Connector Hub resource definition
+> - **Integration:** Works with the incident response function
+> - **Documentation:** See `scripts/oci-service-connector-hub/README.md`
+> 
+> **To use Terraform approach:**
+> 1. Copy `service-connector-terraform.tf` to your Terraform configuration
+> 2. Set variables: `function_ocid`, `compartment_id`, etc.
+> 3. Run `terraform apply`
+> 
+> The manual steps below (using OCI Console) are recommended for learning. The Terraform approach is better for automation and version control.
 
 ### Steps:
 

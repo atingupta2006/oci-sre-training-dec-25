@@ -180,11 +180,41 @@ Set up Python environment and OCI SDK for API access.
 
 Retrieve metrics from OCI Monitoring using Python SDK.
 
+> **📝 Note: Complete Repository Scripts Available**
+> 
+> Pre-built, production-ready scripts are available in the application repository:
+> - **SRE Dashboard:** `scripts/oci-rest-api-dashboard/sre-dashboard.py`
+>   - Comprehensive real-time dashboard with infrastructure metrics, application metrics, alarm status, and SLO tracking
+>   - Auto-refreshes every 30 seconds
+>   - Full error handling and logging
+> - **Metrics Query Example:** `scripts/oci-rest-api-dashboard/query-metrics.py`
+>   - Simple example for querying specific metrics
+>   - Environment variable support
+>   - Command-line configuration
+> - **Documentation:** See `scripts/oci-rest-api-dashboard/README.md` for full usage
+> 
+> **Quick Start with Repository Scripts:**
+> ```bash
+> # Set environment variables
+> export OCI_COMPARTMENT_OCID=ocid1.compartment.oc1...
+> export OCI_INSTANCE_OCID=ocid1.instance.oc1...  # Optional
+> 
+> # Run comprehensive dashboard
+> python3 scripts/oci-rest-api-dashboard/sre-dashboard.py
+> 
+> # Or run metrics query example
+> python3 scripts/oci-rest-api-dashboard/query-metrics.py
+> ```
+> 
+> You can use these repository scripts directly, or follow the steps below to create your own versions (recommended for learning).
+
 ### Steps:
 
 #### Step 1: Create Metrics Query Script
 
 1. **Create script file:**
+
+   Create your own script to learn the implementation:
    ```bash
    cat > ~/query-metrics.py << 'EOF'
    #!/usr/bin/env python3
@@ -432,11 +462,23 @@ Retrieve alarm status and state via API.
 
 Create a simple SRE dashboard that displays key metrics and alarm status.
 
+> **📝 Note: Complete Dashboard Script Available**
+> 
+> A comprehensive, production-ready SRE dashboard script is available in the application repository:
+> - **Location:** `scripts/oci-rest-api-dashboard/sre-dashboard.py`
+> - **Features:** Real-time dashboard with auto-refresh, infrastructure metrics, application metrics, alarm status, SLO tracking
+> - **Usage:** `python3 scripts/oci-rest-api-dashboard/sre-dashboard.py`
+> - **Documentation:** See `scripts/oci-rest-api-dashboard/README.md`
+> 
+> You can use the repository script directly, or follow the steps below to create your own version (recommended for learning).
+
 ### Steps:
 
 #### Step 1: Create Dashboard Script
 
 1. **Create comprehensive dashboard script:**
+
+   Create your own script to learn the implementation:
    ```bash
    cat > ~/sre-dashboard.py << 'EOF'
    #!/usr/bin/env python3

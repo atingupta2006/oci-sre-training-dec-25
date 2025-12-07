@@ -79,6 +79,26 @@ A public load balancer is created and ready for backend attachment.
 
 Provide redundancy through multiple application servers across Fault Domains.
 
+> **📝 Note: Infrastructure as Code Option Available**
+> 
+> You can also deploy instance pools and auto-scaling using Terraform (Infrastructure as Code). The application repository includes complete Terraform configurations:
+> - **Location:** `deployment/terraform/option-2/instance-pool-autoscaling.tf`
+> - **Configuration:** Instance Configuration, Instance Pool, Auto Scaling Configuration
+> - **Variables:** Configure thresholds, pool size, and scaling policies via Terraform variables
+> - **Documentation:** See `deployment/terraform/option-2/README.md`
+> 
+> **To use Terraform approach:**
+> 1. Navigate to `deployment/terraform/option-2/`
+> 2. Set variables in `terraform.tfvars`:
+>    - `enable_instance_pool = true`
+>    - `enable_auto_scaling = true`
+>    - `instance_pool_size = 2`
+>    - `auto_scaling_scale_out_threshold = 70`
+>    - `auto_scaling_scale_in_threshold = 30`
+> 3. Run `terraform apply`
+> 
+> The manual steps below (using OCI Console) are recommended for learning the concepts. The Terraform approach is better for automation and repeatability.
+
 ### Steps
 
 #### A. Create Instance Configuration

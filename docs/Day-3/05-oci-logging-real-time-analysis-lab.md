@@ -148,6 +148,20 @@ Ingest BharatMart application logs into OCI Logging Service.
    Replace:
    - `<LOG_OCID>` with the OCID of the Log you created (found in Log details)
    - `/path/to/bharatmart/logs/api.log` with actual path to BharatMart log file
+   
+   **Log Path Guidance:**
+   - **Default location:** `logs/api.log` (relative to application directory)
+   - **Configurable via:** `LOG_FILE` environment variable
+   - **Common paths:**
+     - Development: `/home/opc/bharatmart/logs/api.log`
+     - Production: `/var/log/bharatmart/api.log`
+     - Custom: Check your application's `.env` file for `LOG_FILE` variable
+   
+   > **📝 Note: Complete Setup Guide**
+   > 
+   > For detailed Cloud Agent configuration instructions, troubleshooting, and examples, see:
+   > - **Application Documentation:** `docs/06-observability/08-oci-cloud-agent-setup.md`
+   > - **GitHub Repository:** [OCI Cloud Agent Setup Guide](https://github.com/atingupta2006/oci-multi-tier-web-app-ecommerce/tree/main/docs/06-observability/08-oci-cloud-agent-setup.md)
 
 4. **Restart Cloud Agent:**
    ```bash

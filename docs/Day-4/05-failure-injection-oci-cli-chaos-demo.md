@@ -52,6 +52,24 @@ Demonstrate how to inject controlled failures to test system resilience and vali
 
 ## 4. Demonstration Steps
 
+> **📝 Note: Automation Script Available**
+> 
+> A comprehensive automation script is available in the application repository that wraps these OCI CLI commands:
+> - **Location:** `scripts/chaos/oci-cli-failure-injection.sh`
+> - **Features:** Automated instance start/stop, status checks, load balancer health checks
+> - **Documentation:** See `scripts/chaos/README.md` for full usage
+> 
+> **Quick Start with Automation Script:**
+> ```bash
+> # Configure script with your OCIDs (edit script header)
+> ./scripts/chaos/oci-cli-failure-injection.sh status <instance-ocid>
+> ./scripts/chaos/oci-cli-failure-injection.sh stop <instance-ocid>
+> ./scripts/chaos/oci-cli-failure-injection.sh start <instance-ocid>
+> ./scripts/chaos/oci-cli-failure-injection.sh lb-health
+> ```
+> 
+> The manual CLI commands below are recommended for learning. The automation script is useful for repeated testing.
+
 #### Step 1: Baseline System State
 
 1. **Check Current State:**
