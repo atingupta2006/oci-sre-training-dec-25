@@ -728,6 +728,45 @@
     </span>
   </a>
   
+    <nav class="md-nav" aria-label="5. Key Points to Emphasize">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#benefits-of-iac" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Benefits of IaC:
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#sre-benefits" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        SRE Benefits:
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#oci-resource-manager-advantages" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        OCI Resource Manager Advantages:
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
 </li>
       
         <li class="md-nav__item">
@@ -2373,6 +2412,45 @@
     </span>
   </a>
   
+    <nav class="md-nav" aria-label="5. Key Points to Emphasize">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#benefits-of-iac" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Benefits of IaC:
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#sre-benefits" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        SRE Benefits:
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#oci-resource-manager-advantages" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        OCI Resource Manager Advantages:
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
 </li>
       
         <li class="md-nav__item">
@@ -2420,10 +2498,12 @@
 <hr />
 <h2 id="0-deployment-assumptions">0. Deployment Assumptions<a class="headerlink" href="#0-deployment-assumptions" title="Permanent link">&para;</a></h2>
 <p>This is an instructor-led demonstration. Students observe the infrastructure provisioning process.</p>
-<p><strong>Assumed Context:</strong>
-* <strong>Instructor</strong> has OCI tenancy with appropriate permissions
-* <strong>Terraform template</strong> prepared (BharatMart infrastructure template)
-* <strong>OCI Resource Manager</strong> access available</p>
+<p><strong>Assumed Context:</strong></p>
+<ul>
+<li><strong>Instructor</strong> has OCI tenancy with appropriate permissions</li>
+<li><strong>Terraform template</strong> prepared (BharatMart infrastructure template)</li>
+<li><strong>OCI Resource Manager</strong> access available</li>
+</ul>
 <hr />
 <h2 id="1-purpose">1. Purpose<a class="headerlink" href="#1-purpose" title="Permanent link">&para;</a></h2>
 <p>Demonstrate how to provision OCI Compute instances and supporting infrastructure using Terraform with OCI Resource Manager, showing the Infrastructure-as-Code (IaC) approach to eliminate manual provisioning toil.</p>
@@ -2437,31 +2517,35 @@
 <hr />
 <h2 id="3-what-youll-demonstrate">3. What You&rsquo;ll Demonstrate<a class="headerlink" href="#3-what-youll-demonstrate" title="Permanent link">&para;</a></h2>
 <ol>
-<li>
-<p><strong>Infrastructure-as-Code Concepts</strong>
-   * Benefits of IaC over manual provisioning
-   * Terraform as infrastructure definition language
-   * OCI Resource Manager as managed Terraform execution platform</p>
-</li>
-<li>
-<p><strong>Terraform Template Structure</strong>
-   * Variables for configuration
-   * Resource definitions
-   * Outputs for created resources</p>
-</li>
-<li>
-<p><strong>Resource Manager Workflow</strong>
-   * Creating a stack from Terraform template
-   * Planning infrastructure changes
-   * Applying infrastructure changes
-   * Reviewing created resources</p>
-</li>
+<li><strong>Infrastructure-as-Code Concepts</strong></li>
 </ol>
+<ul>
+<li>Benefits of IaC over manual provisioning</li>
+<li>Terraform as infrastructure definition language</li>
+<li>OCI Resource Manager as managed Terraform execution platform</li>
+</ul>
+<ol start="2">
+<li><strong>Terraform Template Structure</strong></li>
+</ol>
+<ul>
+<li>Variables for configuration</li>
+<li>Resource definitions</li>
+<li>Outputs for created resources</li>
+</ul>
+<ol start="3">
+<li><strong>Resource Manager Workflow</strong></li>
+</ol>
+<ul>
+<li>Creating a stack from Terraform template</li>
+<li>Planning infrastructure changes</li>
+<li>Applying infrastructure changes</li>
+<li>Reviewing created resources</li>
+</ul>
 <hr />
 <h2 id="4-demonstration-steps">4. Demonstration Steps<a class="headerlink" href="#4-demonstration-steps" title="Permanent link">&para;</a></h2>
 <h4 id="step-1-access-oci-resource-manager">Step 1: Access OCI Resource Manager<a class="headerlink" href="#step-1-access-oci-resource-manager" title="Permanent link">&para;</a></h4>
 <ol>
-<li>Navigate to <strong>OCI Console</strong> → <strong>Developer Services</strong> → <strong>Resource Manager</strong> → <strong>Stacks</strong></li>
+<li>Navigate to <strong>OCI Console</strong> → Click <strong>Menu (☰)</strong> in top-left → <strong>Developer Services</strong> → <strong>Resource Manager</strong> → <strong>Stacks</strong></li>
 <li>Click <strong>Create Stack</strong></li>
 </ol>
 <h4 id="step-2-upload-terraform-configuration">Step 2: Upload Terraform Configuration<a class="headerlink" href="#step-2-upload-terraform-configuration" title="Permanent link">&para;</a></h4>
@@ -2472,24 +2556,26 @@
 </ol>
 <h4 id="step-3-configure-stack-variables">Step 3: Configure Stack Variables<a class="headerlink" href="#step-3-configure-stack-variables" title="Permanent link">&para;</a></h4>
 <ol>
-<li>
-<p><strong>Stack Information:</strong>
-   - Name: <code>bharatmart-infrastructure-demo</code>
-   - Description: <code>BharatMart infrastructure for Day 1 demonstration</code>
-   - Compartment: Select appropriate compartment</p>
-</li>
-<li>
-<p><strong>Variables Configuration:</strong>
-   - <code>compartment_id</code>: Select compartment for resources
-   - <code>region</code>: Select region (e.g., <code>us-ashburn-1</code>)
-   - <code>instance_count</code>: Set to <code>2</code> (for demonstration)
-   - <code>instance_shape</code>: <code>VM.Standard.E2.1</code>
-   - <code>ssh_public_key</code>: Provide SSH public key for access
-   - Other variables as needed</p>
-</li>
-<li>
-<p>Click <strong>Next</strong></p>
-</li>
+<li><strong>Stack Information:</strong></li>
+</ol>
+<ul>
+<li>Name: <code>bharatmart-infrastructure-demo</code></li>
+<li>Description: <code>BharatMart infrastructure for Day 1 demonstration</code></li>
+<li>Compartment: Select appropriate compartment</li>
+</ul>
+<ol start="2">
+<li><strong>Variables Configuration:</strong></li>
+</ol>
+<ul>
+<li><code>compartment_id</code>: Select compartment for resources</li>
+<li><code>region</code>: Select region (e.g., <code>us-ashburn-1</code>)</li>
+<li><code>instance_count</code>: Set to <code>2</code> (for demonstration)</li>
+<li><code>instance_shape</code>: <code>VM.Standard.E2.1</code></li>
+<li><code>ssh_public_key</code>: Provide SSH public key for access</li>
+<li>Other variables as needed</li>
+</ul>
+<ol start="3">
+<li>Click <strong>Next</strong></li>
 </ol>
 <h4 id="step-4-review-and-create-stack">Step 4: Review and Create Stack<a class="headerlink" href="#step-4-review-and-create-stack" title="Permanent link">&para;</a></h4>
 <ol>
@@ -2507,14 +2593,16 @@
    - Configuration validation</p>
 </li>
 <li>
-<p><strong>Key Resources Being Created:</strong>
-   - VCN with public and private subnets
-   - Internet Gateway and NAT Gateway
-   - Security Lists with appropriate rules
-   - 2 Compute instances for BharatMart backend
-   - Load Balancer with health checks configured on <code>/api/health</code> endpoint</p>
+<p><strong>Key Resources Being Created:</strong></p>
 </li>
 </ol>
+<ul>
+<li>VCN with public and private subnets</li>
+<li>Internet Gateway and NAT Gateway</li>
+<li>Security Lists with appropriate rules</li>
+<li>2 Compute instances for BharatMart backend</li>
+<li>Load Balancer with health checks configured on <code>/api/health</code> endpoint</li>
+</ul>
 <h4 id="step-6-apply-infrastructure">Step 6: Apply Infrastructure<a class="headerlink" href="#step-6-apply-infrastructure" title="Permanent link">&para;</a></h4>
 <ol>
 <li>Click <strong>Apply</strong> button</li>
@@ -2526,45 +2614,48 @@
 </ol>
 <h4 id="step-7-verify-created-resources">Step 7: Verify Created Resources<a class="headerlink" href="#step-7-verify-created-resources" title="Permanent link">&para;</a></h4>
 <ol>
-<li>
-<p>Navigate to <strong>Compute</strong> → <strong>Instances</strong>:
-   - Verify 2 instances are running
-   - Check instance names and shapes</p>
-</li>
-<li>
-<p>Navigate to <strong>Networking</strong> → <strong>Load Balancers</strong>:
-   - Verify Load Balancer is active
-   - Review backend set configuration
-   - Check health check endpoint: <code>/api/health</code></p>
-</li>
-<li>
-<p>Navigate to <strong>Networking</strong> → <strong>Virtual Cloud Networks</strong>:
-   - Verify VCN and subnets are created
-   - Review security list rules</p>
-</li>
+<li><strong>Verify Compute Instances:</strong></li>
 </ol>
+<ul>
+<li>Navigate to <strong>Menu (☰)</strong> → <strong>Compute</strong> → <strong>Instances</strong></li>
+<li>Verify 2 instances are running</li>
+<li>Check instance names and shapes</li>
+</ul>
+<ol start="2">
+<li><strong>Verify Load Balancer:</strong></li>
+</ol>
+<ul>
+<li>Navigate to <strong>Menu (☰)</strong> → <strong>Networking</strong> → <strong>Load Balancers</strong></li>
+<li>Verify Load Balancer is active</li>
+<li>Review backend set configuration</li>
+<li>Check health check endpoint: <code>/api/health</code></li>
+</ul>
+<ol start="3">
+<li><strong>Verify VCN:</strong></li>
+</ol>
+<ul>
+<li>Navigate to <strong>Menu (☰)</strong> → <strong>Networking</strong> → <strong>Virtual Cloud Networks</strong></li>
+<li>Verify VCN and subnets are created</li>
+<li>Review security list rules</li>
+</ul>
 <hr />
 <h2 id="5-key-points-to-emphasize">5. Key Points to Emphasize<a class="headerlink" href="#5-key-points-to-emphasize" title="Permanent link">&para;</a></h2>
+<h4 id="benefits-of-iac">Benefits of IaC:<a class="headerlink" href="#benefits-of-iac" title="Permanent link">&para;</a></h4>
 <ul>
-<li><strong>Benefits of IaC:</strong></li>
 <li>Repeatability: Same infrastructure every time</li>
 <li>Version control: Track infrastructure changes</li>
 <li>Reduced errors: Automated provisioning eliminates manual mistakes</li>
-<li>
-<p>Documentation: Infrastructure is self-documenting</p>
-</li>
-<li>
-<p><strong>SRE Benefits:</strong></p>
-</li>
+<li>Documentation: Infrastructure is self-documenting</li>
+</ul>
+<h4 id="sre-benefits">SRE Benefits:<a class="headerlink" href="#sre-benefits" title="Permanent link">&para;</a></h4>
+<ul>
 <li>Eliminates toil from manual infrastructure provisioning</li>
 <li>Enables infrastructure testing and validation</li>
 <li>Supports disaster recovery through reproducible infrastructure</li>
-<li>
-<p>Facilitates compliance through standardized configurations</p>
-</li>
-<li>
-<p><strong>OCI Resource Manager Advantages:</strong></p>
-</li>
+<li>Facilitates compliance through standardized configurations</li>
+</ul>
+<h4 id="oci-resource-manager-advantages">OCI Resource Manager Advantages:<a class="headerlink" href="#oci-resource-manager-advantages" title="Permanent link">&para;</a></h4>
+<ul>
 <li>Managed Terraform state storage</li>
 <li>Built-in access control via IAM</li>
 <li>Integration with OCI services (Logging, Monitoring)</li>
@@ -2581,11 +2672,13 @@
 </ul>
 <hr />
 <h2 id="7-next-steps">7. Next Steps<a class="headerlink" href="#7-next-steps" title="Permanent link">&para;</a></h2>
-<p>After this demonstration, students will:
-* Understand Infrastructure-as-Code concepts
-* See how Terraform automates infrastructure provisioning
-* Be prepared for hands-on labs using Cloud Shell and SDKs
-* Recognize the value of eliminating manual infrastructure toil</p>
+<p>After this demonstration, students will:</p>
+<ul>
+<li>Understand Infrastructure-as-Code concepts</li>
+<li>See how Terraform automates infrastructure provisioning</li>
+<li>Be prepared for hands-on labs using Cloud Shell and SDKs</li>
+<li>Recognize the value of eliminating manual infrastructure toil</li>
+</ul>
 
 
 

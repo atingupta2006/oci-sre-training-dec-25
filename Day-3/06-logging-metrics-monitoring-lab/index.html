@@ -3152,25 +3152,33 @@
 <h2 id="2-background-concepts">2. Background Concepts<a class="headerlink" href="#2-background-concepts" title="Permanent link">&para;</a></h2>
 <h3 id="21-what-are-logging-based-metrics">2.1 What Are Logging-Based Metrics?<a class="headerlink" href="#21-what-are-logging-based-metrics" title="Permanent link">&para;</a></h3>
 <p>Logging-based metrics let you turn <strong>log events</strong> into <strong>numeric measurements</strong>.</p>
-<p>Examples:
-* Count of 5xx errors per minute
-* Number of failed login attempts
-* Order placement success count
-* Slow request warnings</p>
-<p>This is useful when:
-* Your app logs contain reliability signals
-* You need fine-grained insights from message patterns
-* You want to track custom events without instrumenting code</p>
+<p>Examples:</p>
+<ul>
+<li>Count of 5xx errors per minute</li>
+<li>Number of failed login attempts</li>
+<li>Order placement success count</li>
+<li>Slow request warnings</li>
+</ul>
+<p>This is useful when:</p>
+<ul>
+<li>Your app logs contain reliability signals</li>
+<li>You need fine-grained insights from message patterns</li>
+<li>You want to track custom events without instrumenting code</li>
+</ul>
 <h3 id="22-why-logging-based-metrics-matter-for-sre">2.2 Why Logging-Based Metrics Matter for SRE<a class="headerlink" href="#22-why-logging-based-metrics-matter-for-sre" title="Permanent link">&para;</a></h3>
-<p>They allow you to:
-* Tie log patterns to SLO indicators
-* Generate alerts from critical logs
-* Visualize application behaviors
-* Detect anomalies from log-based events</p>
+<p>They allow you to:</p>
+<ul>
+<li>Tie log patterns to SLO indicators</li>
+<li>Generate alerts from critical logs</li>
+<li>Visualize application behaviors</li>
+<li>Detect anomalies from log-based events</li>
+</ul>
 <h3 id="23-bharatmart-structured-logs">2.3 BharatMart Structured Logs<a class="headerlink" href="#23-bharatmart-structured-logs" title="Permanent link">&para;</a></h3>
-<p>The BharatMart application uses <strong>structured JSON logging</strong> via Winston logger. Logs contain fields like:
-* <code>timestamp</code>, <code>level</code>, <code>message</code>, <code>route</code>, <code>status_code</code>
-* Business context: <code>orderId</code>, <code>userId</code>, <code>paymentStatus</code></p>
+<p>The BharatMart application uses <strong>structured JSON logging</strong> via Winston logger. Logs contain fields like:</p>
+<ul>
+<li><code>timestamp</code>, <code>level</code>, <code>message</code>, <code>route</code>, <code>status_code</code></li>
+<li>Business context: <code>orderId</code>, <code>userId</code>, <code>paymentStatus</code></li>
+</ul>
 <p>Example log entry:
 <div class="highlight"><pre><span></span><code><span class="p">{</span><span class="nt">&quot;timestamp&quot;</span><span class="p">:</span><span class="s2">&quot;2025-11-14T12:01:05Z&quot;</span><span class="p">,</span><span class="nt">&quot;level&quot;</span><span class="p">:</span><span class="s2">&quot;error&quot;</span><span class="p">,</span><span class="nt">&quot;route&quot;</span><span class="p">:</span><span class="s2">&quot;/api/orders&quot;</span><span class="p">,</span><span class="nt">&quot;status_code&quot;</span><span class="p">:</span><span class="mi">500</span><span class="p">,</span><span class="nt">&quot;message&quot;</span><span class="p">:</span><span class="s2">&quot;Order creation failed&quot;</span><span class="p">,</span><span class="nt">&quot;orderId&quot;</span><span class="p">:</span><span class="s2">&quot;123&quot;</span><span class="p">}</span>
 </code></pre></div></p>
@@ -3230,10 +3238,12 @@
 </ul>
 <p>OCI now emits a new metric <strong>every minute</strong> based on matching logs.</p>
 <h3 id="repeat-for-additional-metrics">Repeat for Additional Metrics:<a class="headerlink" href="#repeat-for-additional-metrics" title="Permanent link">&para;</a></h3>
-<p>Create metrics for:
-* Error count: <code>level = 'error'</code>
-* Order failures: <code>level = 'error' and route = '/api/orders'</code>
-* Payment failures: <code>level = 'error' and route = '/api/payments'</code></p>
+<p>Create metrics for:</p>
+<ul>
+<li>Error count: <code>level = 'error'</code></li>
+<li>Order failures: <code>level = 'error' and route = '/api/orders'</code></li>
+<li>Payment failures: <code>level = 'error' and route = '/api/payments'</code></li>
+</ul>
 <h3 id="expected-result_1">Expected Result:<a class="headerlink" href="#expected-result_1" title="Permanent link">&para;</a></h3>
 <ul>
 <li>Metric creation confirmation</li>
@@ -3290,10 +3300,12 @@ curl<span class="w"> </span>http://localhost:3000/api/nonexistent
 6. Click <strong>Create</strong>.</li>
 </ul>
 <h3 id="add-additional-widgets">Add Additional Widgets:<a class="headerlink" href="#add-additional-widgets" title="Permanent link">&para;</a></h3>
-<p>Repeat to add widgets for:
-* Total error count
-* Payment failures
-* Successful orders (if you created that metric)</p>
+<p>Repeat to add widgets for:</p>
+<ul>
+<li>Total error count</li>
+<li>Payment failures</li>
+<li>Successful orders (if you created that metric)</li>
+</ul>
 <h3 id="expected-result_3">Expected Result:<a class="headerlink" href="#expected-result_3" title="Permanent link">&para;</a></h3>
 <ul>
 <li>Dashboard shows log-based metrics</li>
@@ -3310,11 +3322,13 @@ curl<span class="w"> </span>http://localhost:3000/api/nonexistent
 <li>Verified metrics in Metric Explorer</li>
 <li>Added metrics to dashboards for visualization</li>
 </ul>
-<p>This is critical for:
-* Error budget tracking
-* Detecting production anomalies
-* Creating actionable alarms
-* Complete observability using logs + metrics</p>
+<p>This is critical for:</p>
+<ul>
+<li>Error budget tracking</li>
+<li>Detecting production anomalies</li>
+<li>Creating actionable alarms</li>
+<li>Complete observability using logs + metrics</li>
+</ul>
 <hr />
 <h2 id="8-solutions-key-instructor-reference">8. Solutions Key (Instructor Reference)<a class="headerlink" href="#8-solutions-key-instructor-reference" title="Permanent link">&para;</a></h2>
 <h3 id="solution-key-task-1-logging-query">✔ Solution Key — Task 1: Logging Query<a class="headerlink" href="#solution-key-task-1-logging-query" title="Permanent link">&para;</a></h3>

@@ -2710,10 +2710,12 @@
 <hr />
 <h2 id="0-deployment-assumptions">0. Deployment Assumptions<a class="headerlink" href="#0-deployment-assumptions" title="Permanent link">&para;</a></h2>
 <p>For this topic, we assume that <strong>BharatMart e-commerce platform</strong> will be deployed on OCI to demonstrate architecture concepts.</p>
-<p><strong>Assumed Context:</strong>
-* <strong>BharatMart platform</strong> will be deployed on OCI Compute instances
-* <strong>OCI infrastructure</strong> will be provisioned (VCNs, Load Balancers, etc.)
-* <strong>OCI services</strong> (Monitoring, Logging) will be used for observability</p>
+<p><strong>Assumed Context:</strong></p>
+<ul>
+<li><strong>BharatMart platform</strong> will be deployed on OCI Compute instances</li>
+<li><strong>OCI infrastructure</strong> will be provisioned (VCNs, Load Balancers, etc.)</li>
+<li><strong>OCI services</strong> (Monitoring, Logging) will be used for observability</li>
+</ul>
 <hr />
 <h2 id="1-concept-overview">1. Concept Overview<a class="headerlink" href="#1-concept-overview" title="Permanent link">&para;</a></h2>
 <p>OCI (Oracle Cloud Infrastructure) core architecture provides the foundational building blocks required to deploy reliable, secure, and scalable applications. For IT engineers and developers, understanding OCI&rsquo;s architectural components is essential for designing applications that meet SRE-driven reliability targets such as availability, latency, and resilience.</p>
@@ -2746,17 +2748,21 @@
 <h2 id="3-core-oci-concepts">3. Core OCI Concepts<a class="headerlink" href="#3-core-oci-concepts" title="Permanent link">&para;</a></h2>
 <h4 id="compartments">Compartments<a class="headerlink" href="#compartments" title="Permanent link">&para;</a></h4>
 <p>OCI uses compartments to isolate resources for permissions, billing, and governance.</p>
-<p>Compartments provide:
-* <strong>Logical organization:</strong> Group related resources together
-* <strong>Access control:</strong> IAM policies apply at compartment level
-* <strong>Billing isolation:</strong> Track costs per compartment
-* <strong>Resource limits:</strong> Apply quotas per compartment</p>
+<p>Compartments provide:</p>
+<ul>
+<li><strong>Logical organization:</strong> Group related resources together</li>
+<li><strong>Access control:</strong> IAM policies apply at compartment level</li>
+<li><strong>Billing isolation:</strong> Track costs per compartment</li>
+<li><strong>Resource limits:</strong> Apply quotas per compartment</li>
+</ul>
 <h4 id="tenancy">Tenancy<a class="headerlink" href="#tenancy" title="Permanent link">&para;</a></h4>
 <p>The tenancy is your root compartment and represents your Oracle Cloud account. All resources are organized within the tenancy and its compartments.</p>
-<p>Key tenancy concepts:
-* <strong>Region:</strong> Geographic location (e.g., us-ashburn-1, eu-frankfurt-1)
-* <strong>Availability Domain (AD):</strong> Independent data centers within a region
-* <strong>Fault Domain (FD):</strong> Logical groups of hardware within an AD that share power and network</p>
+<p>Key tenancy concepts:</p>
+<ul>
+<li><strong>Region:</strong> Geographic location (e.g., us-ashburn-1, eu-frankfurt-1)</li>
+<li><strong>Availability Domain (AD):</strong> Independent data centers within a region</li>
+<li><strong>Fault Domain (FD):</strong> Logical groups of hardware within an AD that share power and network</li>
+</ul>
 <hr />
 <h2 id="4-key-principles">4. Key Principles<a class="headerlink" href="#4-key-principles" title="Permanent link">&para;</a></h2>
 <h4 id="principle-1-compartmentalisation">Principle 1: Compartmentalisation<a class="headerlink" href="#principle-1-compartmentalisation" title="Permanent link">&para;</a></h4>
@@ -2777,12 +2783,14 @@
 <p>Logs + metrics + alarms allow SRE to detect degradation early.</p>
 <hr />
 <h2 id="5-bharatmart-platform-on-oci">5. BharatMart Platform on OCI<a class="headerlink" href="#5-bharatmart-platform-on-oci" title="Permanent link">&para;</a></h2>
-<p>BharatMart demonstrates this architecture:
-* <strong>Application:</strong> BharatMart API runs on OCI Compute instances
-* <strong>Network:</strong> Connected via VCN with public/private subnets
-* <strong>Database:</strong> OCI Autonomous Database or Supabase
-* <strong>Observability:</strong> Metrics at <code>/metrics</code>, health at <code>/api/health</code>, logs for monitoring
-* <strong>Load Balancing:</strong> OCI Load Balancer routes traffic to healthy API instances</p>
+<p>BharatMart demonstrates this architecture:</p>
+<ul>
+<li><strong>Application:</strong> BharatMart API runs on OCI Compute instances</li>
+<li><strong>Network:</strong> Connected via VCN with public/private subnets</li>
+<li><strong>Database:</strong> OCI Autonomous Database or Supabase</li>
+<li><strong>Observability:</strong> Metrics at <code>/metrics</code>, health at <code>/api/health</code>, logs for monitoring</li>
+<li><strong>Load Balancing:</strong> OCI Load Balancer routes traffic to healthy API instances</li>
+</ul>
 <hr />
 <h2 id="6-real-world-examples">6. Real-World Examples<a class="headerlink" href="#6-real-world-examples" title="Permanent link">&para;</a></h2>
 <h3 id="example-1-oci-load-balancer-backend-failures">Example 1 — OCI Load Balancer Backend Failures<a class="headerlink" href="#example-1-oci-load-balancer-backend-failures" title="Permanent link">&para;</a></h3>

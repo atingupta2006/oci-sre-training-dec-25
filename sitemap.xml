@@ -2,202 +2,202 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
     <url>
          <loc>https://your-site-url.com/</loc>
-         <lastmod>2025-12-06</lastmod>
+         <lastmod>2025-12-07</lastmod>
     </url>
     <url>
          <loc>https://your-site-url.com/bookmarks/</loc>
-         <lastmod>2025-12-06</lastmod>
+         <lastmod>2025-12-07</lastmod>
     </url>
     <url>
          <loc>https://your-site-url.com/Day-1/</loc>
-         <lastmod>2025-12-06</lastmod>
+         <lastmod>2025-12-07</lastmod>
     </url>
     <url>
          <loc>https://your-site-url.com/Day-1/01-what-is-site-reliability-engineering/</loc>
-         <lastmod>2025-12-06</lastmod>
+         <lastmod>2025-12-07</lastmod>
     </url>
     <url>
          <loc>https://your-site-url.com/Day-1/02-history-of-sre/</loc>
-         <lastmod>2025-12-06</lastmod>
+         <lastmod>2025-12-07</lastmod>
     </url>
     <url>
          <loc>https://your-site-url.com/Day-1/03-sre-vs-devops-vs-platform-engineering/</loc>
-         <lastmod>2025-12-06</lastmod>
+         <lastmod>2025-12-07</lastmod>
     </url>
     <url>
          <loc>https://your-site-url.com/Day-1/04-principles-of-sre-sli-slo-error-budget/</loc>
-         <lastmod>2025-12-06</lastmod>
+         <lastmod>2025-12-07</lastmod>
     </url>
     <url>
          <loc>https://your-site-url.com/Day-1/05-oci-architecture-overview/</loc>
-         <lastmod>2025-12-06</lastmod>
+         <lastmod>2025-12-07</lastmod>
     </url>
     <url>
          <loc>https://your-site-url.com/Day-1/06-multi-region-oci-tenancy-demo/</loc>
-         <lastmod>2025-12-06</lastmod>
+         <lastmod>2025-12-07</lastmod>
     </url>
     <url>
          <loc>https://your-site-url.com/Day-1/07-terraform-compute-instances-demo/</loc>
-         <lastmod>2025-12-06</lastmod>
+         <lastmod>2025-12-07</lastmod>
     </url>
     <url>
          <loc>https://your-site-url.com/Day-1/08-configure-cloud-shell-sdks-lab/</loc>
-         <lastmod>2025-12-06</lastmod>
+         <lastmod>2025-12-07</lastmod>
     </url>
     <url>
          <loc>https://your-site-url.com/Day-1/09-identity-domains-iam-policies-lab/</loc>
-         <lastmod>2025-12-06</lastmod>
+         <lastmod>2025-12-07</lastmod>
     </url>
     <url>
          <loc>https://your-site-url.com/Day-2/</loc>
-         <lastmod>2025-12-06</lastmod>
+         <lastmod>2025-12-07</lastmod>
     </url>
     <url>
          <loc>https://your-site-url.com/Day-2/01-defining-slis-slos-cloud-native/</loc>
-         <lastmod>2025-12-06</lastmod>
+         <lastmod>2025-12-07</lastmod>
     </url>
     <url>
          <loc>https://your-site-url.com/Day-2/02-error-budgets-policy-enforcement/</loc>
-         <lastmod>2025-12-06</lastmod>
+         <lastmod>2025-12-07</lastmod>
     </url>
     <url>
          <loc>https://your-site-url.com/Day-2/03-oci-integrates-sre-principles/</loc>
-         <lastmod>2025-12-06</lastmod>
+         <lastmod>2025-12-07</lastmod>
     </url>
     <url>
          <loc>https://your-site-url.com/Day-2/04-define-sli-slos-demo/</loc>
-         <lastmod>2025-12-06</lastmod>
+         <lastmod>2025-12-07</lastmod>
     </url>
     <url>
          <loc>https://your-site-url.com/Day-2/05-error-budget-breach-simulation-demo/</loc>
-         <lastmod>2025-12-06</lastmod>
+         <lastmod>2025-12-07</lastmod>
     </url>
     <url>
          <loc>https://your-site-url.com/Day-2/06-setup-oci-monitoring-lab/</loc>
-         <lastmod>2025-12-06</lastmod>
+         <lastmod>2025-12-07</lastmod>
     </url>
     <url>
          <loc>https://your-site-url.com/Day-2/07-create-custom-metrics-telemetry-sdk-lab/</loc>
-         <lastmod>2025-12-06</lastmod>
+         <lastmod>2025-12-07</lastmod>
     </url>
     <url>
          <loc>https://your-site-url.com/Day-2/08-implement-alerting-workflows-lab/</loc>
-         <lastmod>2025-12-06</lastmod>
+         <lastmod>2025-12-07</lastmod>
     </url>
     <url>
          <loc>https://your-site-url.com/Day-2/09-dashboards-visualization-lab/</loc>
-         <lastmod>2025-12-06</lastmod>
+         <lastmod>2025-12-07</lastmod>
     </url>
     <url>
          <loc>https://your-site-url.com/Day-3/</loc>
-         <lastmod>2025-12-06</lastmod>
+         <lastmod>2025-12-07</lastmod>
     </url>
     <url>
          <loc>https://your-site-url.com/Day-3/01-what-is-toil-why-reduce/</loc>
-         <lastmod>2025-12-06</lastmod>
+         <lastmod>2025-12-07</lastmod>
     </url>
     <url>
          <loc>https://your-site-url.com/Day-3/02-observability-metrics-logs-traces/</loc>
-         <lastmod>2025-12-06</lastmod>
+         <lastmod>2025-12-07</lastmod>
     </url>
     <url>
          <loc>https://your-site-url.com/Day-3/03-role-automation-sre-types/</loc>
-         <lastmod>2025-12-06</lastmod>
+         <lastmod>2025-12-07</lastmod>
     </url>
     <url>
          <loc>https://your-site-url.com/Day-3/04-terraform-resource-manager-demo/</loc>
-         <lastmod>2025-12-06</lastmod>
+         <lastmod>2025-12-07</lastmod>
     </url>
     <url>
          <loc>https://your-site-url.com/Day-3/05-oci-logging-real-time-analysis-lab/</loc>
-         <lastmod>2025-12-06</lastmod>
+         <lastmod>2025-12-07</lastmod>
     </url>
     <url>
          <loc>https://your-site-url.com/Day-3/06-logging-metrics-monitoring-lab/</loc>
-         <lastmod>2025-12-06</lastmod>
+         <lastmod>2025-12-07</lastmod>
     </url>
     <url>
          <loc>https://your-site-url.com/Day-3/07-reduce-toil-scheduled-functions-lab/</loc>
-         <lastmod>2025-12-06</lastmod>
+         <lastmod>2025-12-07</lastmod>
     </url>
     <url>
          <loc>https://your-site-url.com/Day-4/</loc>
-         <lastmod>2025-12-06</lastmod>
+         <lastmod>2025-12-07</lastmod>
     </url>
     <url>
          <loc>https://your-site-url.com/Day-4/01-anti-fragility-chaos-engineering/</loc>
-         <lastmod>2025-12-06</lastmod>
+         <lastmod>2025-12-07</lastmod>
     </url>
     <url>
          <loc>https://your-site-url.com/Day-4/02-oci-services-ha-resilience/</loc>
-         <lastmod>2025-12-06</lastmod>
+         <lastmod>2025-12-07</lastmod>
     </url>
     <url>
          <loc>https://your-site-url.com/Day-4/03-learning-from-failure-postmortem-culture/</loc>
-         <lastmod>2025-12-06</lastmod>
+         <lastmod>2025-12-07</lastmod>
     </url>
     <url>
          <loc>https://your-site-url.com/Day-4/04-simulate-region-failure-cross-region-dr-demo/</loc>
-         <lastmod>2025-12-06</lastmod>
+         <lastmod>2025-12-07</lastmod>
     </url>
     <url>
          <loc>https://your-site-url.com/Day-4/05-failure-injection-oci-cli-chaos-demo/</loc>
-         <lastmod>2025-12-06</lastmod>
+         <lastmod>2025-12-07</lastmod>
     </url>
     <url>
          <loc>https://your-site-url.com/Day-4/06-load-balancer-auto-scaling-lab/</loc>
-         <lastmod>2025-12-06</lastmod>
+         <lastmod>2025-12-07</lastmod>
     </url>
     <url>
          <loc>https://your-site-url.com/Day-4/07-oci-vault-secrets-resilience-lab/</loc>
-         <lastmod>2025-12-06</lastmod>
+         <lastmod>2025-12-07</lastmod>
     </url>
     <url>
          <loc>https://your-site-url.com/Day-4/08-blameless-postmortem-simulated-outage-lab/</loc>
-         <lastmod>2025-12-06</lastmod>
+         <lastmod>2025-12-07</lastmod>
     </url>
     <url>
          <loc>https://your-site-url.com/Day-5/</loc>
-         <lastmod>2025-12-06</lastmod>
+         <lastmod>2025-12-07</lastmod>
     </url>
     <url>
          <loc>https://your-site-url.com/Day-5/01-organizational-shift-to-sre/</loc>
-         <lastmod>2025-12-06</lastmod>
+         <lastmod>2025-12-07</lastmod>
     </url>
     <url>
          <loc>https://your-site-url.com/Day-5/02-blameless-culture-on-call-rotational-health/</loc>
-         <lastmod>2025-12-06</lastmod>
+         <lastmod>2025-12-07</lastmod>
     </url>
     <url>
          <loc>https://your-site-url.com/Day-5/03-secure-automation-practices/</loc>
-         <lastmod>2025-12-06</lastmod>
+         <lastmod>2025-12-07</lastmod>
     </url>
     <url>
          <loc>https://your-site-url.com/Day-5/04-sre-context-itil-agile-devops/</loc>
-         <lastmod>2025-12-06</lastmod>
+         <lastmod>2025-12-07</lastmod>
     </url>
     <url>
          <loc>https://your-site-url.com/Day-5/05-service-connector-hub-incident-response-lab/</loc>
-         <lastmod>2025-12-06</lastmod>
+         <lastmod>2025-12-07</lastmod>
     </url>
     <url>
          <loc>https://your-site-url.com/Day-5/06-secure-automation-vault-dynamic-secrets-lab/</loc>
-         <lastmod>2025-12-06</lastmod>
+         <lastmod>2025-12-07</lastmod>
     </url>
     <url>
          <loc>https://your-site-url.com/Day-5/07-oci-rest-apis-sre-dashboard-lab/</loc>
-         <lastmod>2025-12-06</lastmod>
+         <lastmod>2025-12-07</lastmod>
     </url>
     <url>
          <loc>https://your-site-url.com/Day-5/08-oci-devops-pipeline-slis-lab/</loc>
-         <lastmod>2025-12-06</lastmod>
+         <lastmod>2025-12-07</lastmod>
     </url>
     <url>
          <loc>https://your-site-url.com/Day-5/09-end-of-day-review/</loc>
-         <lastmod>2025-12-06</lastmod>
+         <lastmod>2025-12-07</lastmod>
     </url>
     <url>
          <loc>https://your-site-url.com/Presentation/</loc>
-         <lastmod>2025-12-06</lastmod>
+         <lastmod>2025-12-07</lastmod>
     </url>
 </urlset>

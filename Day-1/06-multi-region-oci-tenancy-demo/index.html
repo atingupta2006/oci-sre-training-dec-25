@@ -667,6 +667,45 @@
     </span>
   </a>
   
+    <nav class="md-nav" aria-label="5. Key Points to Emphasize">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#multi-region-benefits" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Multi-region benefits:
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#challenges" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Challenges:
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#sre-considerations" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        SRE Considerations:
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
 </li>
       
         <li class="md-nav__item">
@@ -2296,6 +2335,45 @@
     </span>
   </a>
   
+    <nav class="md-nav" aria-label="5. Key Points to Emphasize">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#multi-region-benefits" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Multi-region benefits:
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#challenges" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Challenges:
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#sre-considerations" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        SRE Considerations:
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
 </li>
       
         <li class="md-nav__item">
@@ -2332,10 +2410,12 @@
 <hr />
 <h2 id="0-deployment-assumptions">0. Deployment Assumptions<a class="headerlink" href="#0-deployment-assumptions" title="Permanent link">&para;</a></h2>
 <p>This is an instructor-led demonstration. Students observe the setup process.</p>
-<p><strong>Assumed Context:</strong>
-* <strong>Instructor</strong> has OCI tenancy with admin access
-* <strong>Multiple regions</strong> available in the tenancy
-* <strong>Purpose:</strong> Demonstrate multi-region configuration for high availability</p>
+<p><strong>Assumed Context:</strong></p>
+<ul>
+<li><strong>Instructor</strong> has OCI tenancy with admin access</li>
+<li><strong>Multiple regions</strong> available in the tenancy</li>
+<li><strong>Purpose:</strong> Demonstrate multi-region configuration for high availability</li>
+</ul>
 <hr />
 <h2 id="1-purpose">1. Purpose<a class="headerlink" href="#1-purpose" title="Permanent link">&para;</a></h2>
 <p>Demonstrate how to configure an OCI tenancy to support multi-region deployments, which is essential for high availability and disaster recovery scenarios.</p>
@@ -2370,62 +2450,63 @@
 <h2 id="4-demonstration-steps">4. Demonstration Steps<a class="headerlink" href="#4-demonstration-steps" title="Permanent link">&para;</a></h2>
 <h4 id="step-1-access-oci-console-and-region-selection">Step 1: Access OCI Console and Region Selection<a class="headerlink" href="#step-1-access-oci-console-and-region-selection" title="Permanent link">&para;</a></h4>
 <ol>
-<li>Navigate to <strong>OCI Console</strong> → <strong>Menu (☰)</strong> → <strong>Administration</strong> → <strong>Tenancy Details</strong></li>
-<li>Review available regions in your tenancy</li>
+<li>Navigate to <strong>OCI Console</strong> → Click <strong>Menu (☰)</strong> in top-left → <strong>Governance &amp; Administration</strong> → <strong>Tenancy Details</strong></li>
+<li>In the <strong>Tenancy Details</strong> page, review available regions listed in the <strong>Region Subscriptions</strong> section</li>
 <li>Select two regions for demonstration:
    - <strong>Primary Region:</strong> <code>us-ashburn-1</code> (example)
    - <strong>Secondary Region:</strong> <code>us-phoenix-1</code> (example)</li>
 </ol>
 <h4 id="step-2-enable-multi-region-access">Step 2: Enable Multi-Region Access<a class="headerlink" href="#step-2-enable-multi-region-access" title="Permanent link">&para;</a></h4>
 <ol>
-<li>Go to <strong>Administration</strong> → <strong>Region Management</strong></li>
-<li>Enable subscription for secondary region if not already enabled</li>
-<li>Verify region is active and accessible</li>
+<li>Go to <strong>Menu (☰)</strong> → <strong>Governance &amp; Administration</strong> → <strong>Region Management</strong> (or from Tenancy Details, click <strong>Manage Region Subscriptions</strong>)</li>
+<li>Review <strong>Region Subscriptions</strong> tab to see available regions</li>
+<li>If secondary region is not subscribed, click <strong>Subscribe to Region</strong> and select the region</li>
+<li>Verify region status shows as <strong>Active</strong> and accessible</li>
 </ol>
 <h4 id="step-3-create-compartments-for-multi-region-organization">Step 3: Create Compartments for Multi-Region Organization<a class="headerlink" href="#step-3-create-compartments-for-multi-region-organization" title="Permanent link">&para;</a></h4>
 <ol>
-<li>Go to <strong>Identity &amp; Security</strong> → <strong>Compartments</strong></li>
+<li>Navigate to <strong>Menu (☰)</strong> → <strong>Identity &amp; Security</strong> → <strong>Domains</strong> → <strong>Default Domain</strong> → <strong>Compartments</strong> (or <strong>Menu (☰)</strong> → <strong>Identity &amp; Security</strong> → <strong>Compartments</strong>)</li>
+<li>Click <strong>Create Compartment</strong></li>
 <li>Create compartment structure:
-   - <code>prod-primary</code> (for primary region resources)
-   - <code>prod-secondary</code> (for secondary region resources)
-   - <code>shared-services</code> (for resources shared across regions)</li>
+   * <code>prod-primary</code> (for primary region resources)
+   * <code>prod-secondary</code> (for secondary region resources)
+   * <code>shared-services</code> (for resources shared across regions)</li>
 </ol>
 <h4 id="step-4-demonstrate-multi-region-vcn-setup">Step 4: Demonstrate Multi-Region VCN Setup<a class="headerlink" href="#step-4-demonstrate-multi-region-vcn-setup" title="Permanent link">&para;</a></h4>
 <ol>
-<li>
-<p>In <strong>Primary Region:</strong>
-   - Navigate to <strong>Networking</strong> → <strong>Virtual Cloud Networks</strong>
-   - Show VCN creation in primary region
-   - Note VCN name: <code>bharatmart-prod-primary-vcn</code></p>
-</li>
-<li>
-<p>In <strong>Secondary Region:</strong>
-   - Switch region using region selector
-   - Navigate to <strong>Networking</strong> → <strong>Virtual Cloud Networks</strong>
-   - Show VCN creation in secondary region
-   - Note VCN name: <code>bharatmart-prod-secondary-vcn</code></p>
-</li>
+<li><strong>In Primary Region:</strong></li>
 </ol>
+<ul>
+<li>Switch to primary region using the <strong>Region</strong> selector in top-right of OCI Console</li>
+<li>Navigate to <strong>Menu (☰)</strong> → <strong>Networking</strong> → <strong>Virtual Cloud Networks</strong></li>
+<li>Show VCN creation in primary region</li>
+<li>Note VCN name: <code>bharatmart-prod-primary-vcn</code></li>
+</ul>
+<ol start="2">
+<li><strong>In Secondary Region:</strong></li>
+</ol>
+<ul>
+<li>Switch region using <strong>Region</strong> selector in top-right of OCI Console</li>
+<li>Navigate to <strong>Menu (☰)</strong> → <strong>Networking</strong> → <strong>Virtual Cloud Networks</strong></li>
+<li>Show VCN creation in secondary region</li>
+<li>Note VCN name: <code>bharatmart-prod-secondary-vcn</code></li>
+</ul>
 <hr />
 <h2 id="5-key-points-to-emphasize">5. Key Points to Emphasize<a class="headerlink" href="#5-key-points-to-emphasize" title="Permanent link">&para;</a></h2>
+<h4 id="multi-region-benefits">Multi-region benefits:<a class="headerlink" href="#multi-region-benefits" title="Permanent link">&para;</a></h4>
 <ul>
-<li><strong>Multi-region benefits:</strong></li>
 <li>Disaster recovery capability</li>
 <li>Geographic redundancy</li>
-<li>
-<p>Compliance with data residency requirements</p>
-</li>
-<li>
-<p><strong>Challenges:</strong></p>
-</li>
+<li>Compliance with data residency requirements</li>
+</ul>
+<h4 id="challenges">Challenges:<a class="headerlink" href="#challenges" title="Permanent link">&para;</a></h4>
+<ul>
 <li>Data synchronization between regions</li>
 <li>Latency considerations for cross-region communication</li>
-<li>
-<p>Increased complexity in management</p>
-</li>
-<li>
-<p><strong>SRE Considerations:</strong></p>
-</li>
+<li>Increased complexity in management</li>
+</ul>
+<h4 id="sre-considerations">SRE Considerations:<a class="headerlink" href="#sre-considerations" title="Permanent link">&para;</a></h4>
+<ul>
 <li>Monitoring across regions</li>
 <li>Incident response procedures for region failures</li>
 <li>Capacity planning per region</li>

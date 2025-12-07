@@ -2806,10 +2806,12 @@
 <hr />
 <h2 id="2-background-concepts">2. Background Concepts<a class="headerlink" href="#2-background-concepts" title="Permanent link">&para;</a></h2>
 <h3 id="21-why-secrets-management-matters">2.1 Why Secrets Management Matters<a class="headerlink" href="#21-why-secrets-management-matters" title="Permanent link">&para;</a></h3>
-<p>Hardcoding secrets (DB passwords, API keys) is dangerous:
-* Secrets exposed in code repositories
-* Difficult to rotate without redeployment
-* Security breaches when secrets are compromised</p>
+<p>Hardcoding secrets (DB passwords, API keys) is dangerous:</p>
+<ul>
+<li>Secrets exposed in code repositories</li>
+<li>Difficult to rotate without redeployment</li>
+<li>Security breaches when secrets are compromised</li>
+</ul>
 <p><strong>Benefits of OCI Vault:</strong>
 * Secrets stored securely, encrypted
 * Rotation without code changes

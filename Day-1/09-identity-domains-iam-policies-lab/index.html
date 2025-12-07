@@ -834,6 +834,34 @@
     </span>
   </a>
   
+    <nav class="md-nav" aria-label="6. Troubleshooting">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#access-denied-errors" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Access Denied Errors:
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#cannot-create-policies" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Cannot Create Policies:
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
 </li>
       
         <li class="md-nav__item">
@@ -2462,6 +2490,34 @@
     </span>
   </a>
   
+    <nav class="md-nav" aria-label="6. Troubleshooting">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#access-denied-errors" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Access Denied Errors:
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#cannot-create-policies" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Cannot Create Policies:
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
 </li>
       
         <li class="md-nav__item">
@@ -2498,9 +2554,11 @@
 <hr />
 <h2 id="0-deployment-assumptions">0. Deployment Assumptions<a class="headerlink" href="#0-deployment-assumptions" title="Permanent link">&para;</a></h2>
 <p>For this hands-on lab, you will create IAM policies on your OCI tenancy.</p>
-<p><strong>Prerequisites:</strong>
-* OCI tenancy with admin access (or user with IAM policy management permissions)
-* Understanding of IAM concepts (compartments, policies, groups, users)</p>
+<p><strong>Prerequisites:</strong></p>
+<ul>
+<li>OCI tenancy with admin access (or user with IAM policy management permissions)</li>
+<li>Understanding of IAM concepts (compartments, policies, groups, users)</li>
+</ul>
 <hr />
 <h2 id="1-purpose">1. Purpose<a class="headerlink" href="#1-purpose" title="Permanent link">&para;</a></h2>
 <p>IAM (Identity and Access Management) policies control who can access which OCI resources. This lab shows you how to create IAM policies that grant appropriate access for SRE tasks while following the principle of least privilege.</p>
@@ -2508,28 +2566,37 @@
 <h2 id="2-steps">2. Steps<a class="headerlink" href="#2-steps" title="Permanent link">&para;</a></h2>
 <h4 id="step-1-create-an-sre-group">Step 1: Create an SRE Group<a class="headerlink" href="#step-1-create-an-sre-group" title="Permanent link">&para;</a></h4>
 <ol>
-<li>Navigate to <strong>Identity &amp; Security</strong> → <strong>Domains</strong> → <strong>Default Domain</strong></li>
-<li>Click <strong>Groups</strong> → <strong>Create Group</strong></li>
-<li>Fill in:
-   * <strong>Name:</strong> <code>sre-engineers</code>
-   * <strong>Description:</strong> <code>Site Reliability Engineers with monitoring and operational access</code></li>
+<li>Navigate to <strong>Menu (☰)</strong> → <strong>Identity &amp; Security</strong> → <strong>Domains</strong> → <strong>Default Domain</strong></li>
+<li>Click <strong>Groups</strong> in the left navigation</li>
+<li>Click <strong>Create Group</strong></li>
+<li><strong>Fill in the form:</strong></li>
+</ol>
+<ul>
+<li><strong>Name:</strong> <code>sre-engineers</code></li>
+<li><strong>Description:</strong> <code>Site Reliability Engineers with monitoring and operational access</code></li>
+</ul>
+<ol start="5">
 <li>Click <strong>Create</strong></li>
 </ol>
 <h4 id="step-2-create-iam-policy-for-sre-monitoring-access">Step 2: Create IAM Policy for SRE Monitoring Access<a class="headerlink" href="#step-2-create-iam-policy-for-sre-monitoring-access" title="Permanent link">&para;</a></h4>
 <ol>
-<li>Navigate to <strong>Identity &amp; Security</strong> → <strong>Policies</strong></li>
-<li>Select your tenancy or appropriate compartment</li>
+<li>Navigate to <strong>Menu (☰)</strong> → <strong>Identity &amp; Security</strong> → <strong>Policies</strong></li>
+<li>Select your tenancy or appropriate compartment from the compartment dropdown</li>
 <li>
 <p>Click <strong>Create Policy</strong></p>
 </li>
 <li>
-<p><strong>Policy Information:</strong>
-   * <strong>Name:</strong> <code>sre-monitoring-policy</code>
-   * <strong>Description:</strong> <code>Allows SRE engineers to view monitoring metrics, alarms, and dashboards</code>
-   * <strong>Compartment:</strong> Select your tenancy or root compartment</p>
+<p><strong>Fill in Policy Information:</strong></p>
 </li>
+</ol>
+<ul>
+<li><strong>Name:</strong> <code>sre-monitoring-policy</code></li>
+<li><strong>Description:</strong> <code>Allows SRE engineers to view monitoring metrics, alarms, and dashboards</code></li>
+<li><strong>Compartment:</strong> Select your tenancy or root compartment</li>
+</ul>
+<ol start="5">
 <li>
-<p><strong>Policy Statements:</strong>
+<p><strong>Add Policy Statements:</strong>
    <div class="highlight"><pre><span></span><code>Allow group sre-engineers to read metrics in tenancy
 Allow group sre-engineers to read alarms in tenancy
 Allow group sre-engineers to read dashboards in tenancy
@@ -2545,16 +2612,20 @@ Allow group sre-engineers to read log-saved-searches in tenancy
 <h4 id="step-3-create-iam-policy-for-sre-operational-access">Step 3: Create IAM Policy for SRE Operational Access<a class="headerlink" href="#step-3-create-iam-policy-for-sre-operational-access" title="Permanent link">&para;</a></h4>
 <ol>
 <li>
-<p>Click <strong>Create Policy</strong> again</p>
+<p>From <strong>Identity &amp; Security</strong> → <strong>Policies</strong>, click <strong>Create Policy</strong> again</p>
 </li>
 <li>
-<p><strong>Policy Information:</strong>
-   * <strong>Name:</strong> <code>sre-operational-policy</code>
-   * <strong>Description:</strong> <code>Allows SRE engineers to manage compute instances, view resources, and access logs</code>
-   * <strong>Compartment:</strong> Select your tenancy or root compartment</p>
+<p><strong>Fill in Policy Information:</strong></p>
 </li>
+</ol>
+<ul>
+<li><strong>Name:</strong> <code>sre-operational-policy</code></li>
+<li><strong>Description:</strong> <code>Allows SRE engineers to manage compute instances, view resources, and access logs</code></li>
+<li><strong>Compartment:</strong> Select your tenancy or root compartment</li>
+</ul>
+<ol start="3">
 <li>
-<p><strong>Policy Statements:</strong>
+<p><strong>Add Policy Statements:</strong>
    <div class="highlight"><pre><span></span><code>Allow group sre-engineers to read instances in tenancy
 Allow group sre-engineers to manage instance-console-connections in tenancy
 Allow group sre-engineers to read load-balancers in tenancy
@@ -2571,16 +2642,20 @@ Allow group sre-engineers to read audit-events in tenancy
 <p>For SRE engineers who need to manage infrastructure via Terraform:</p>
 <ol>
 <li>
-<p>Click <strong>Create Policy</strong> again</p>
+<p>From <strong>Identity &amp; Security</strong> → <strong>Policies</strong>, click <strong>Create Policy</strong> again</p>
 </li>
 <li>
-<p><strong>Policy Information:</strong>
-   * <strong>Name:</strong> <code>sre-resource-manager-policy</code>
-   * <strong>Description:</strong> <code>Allows SRE engineers to manage Resource Manager stacks for infrastructure automation</code>
-   * <strong>Compartment:</strong> Select your tenancy or root compartment</p>
+<p><strong>Fill in Policy Information:</strong></p>
 </li>
+</ol>
+<ul>
+<li><strong>Name:</strong> <code>sre-resource-manager-policy</code></li>
+<li><strong>Description:</strong> <code>Allows SRE engineers to manage Resource Manager stacks for infrastructure automation</code></li>
+<li><strong>Compartment:</strong> Select your tenancy or root compartment</li>
+</ul>
+<ol start="3">
 <li>
-<p><strong>Policy Statements:</strong>
+<p><strong>Add Policy Statements:</strong>
    <div class="highlight"><pre><span></span><code>Allow group sre-engineers to manage orm-stacks in tenancy
 Allow group sre-engineers to manage orm-jobs in tenancy
 Allow group sre-engineers to read work-requests in tenancy
@@ -2615,10 +2690,12 @@ oci<span class="w"> </span>lb<span class="w"> </span>load-balancer<span class="w
 <span class="w">  </span>--compartment-id<span class="w"> </span>&lt;compartment-ocid&gt;
 </code></pre></div>
 <p><strong>Expected:</strong> Successful API calls returning resource lists (or empty lists if no resources exist)</p>
-<p><strong>If access denied:</strong> Verify:
-* User is in <code>sre-engineers</code> group
-* Policies are created in correct compartment
-* Policy statements are correct</p>
+<p><strong>If access denied:</strong> Verify:</p>
+<ul>
+<li>User is in <code>sre-engineers</code> group</li>
+<li>Policies are created in correct compartment</li>
+<li>Policy statements are correct</li>
+</ul>
 <h4 id="step-7-create-compartment-specific-sre-policy-best-practice">Step 7: Create Compartment-Specific SRE Policy (Best Practice)<a class="headerlink" href="#step-7-create-compartment-specific-sre-policy-best-practice" title="Permanent link">&para;</a></h4>
 <p>For production environments, create compartment-scoped policies:</p>
 <ol>
@@ -2627,11 +2704,15 @@ oci<span class="w"> </span>lb<span class="w"> </span>load-balancer<span class="w
 <p>Click <strong>Create Policy</strong></p>
 </li>
 <li>
-<p><strong>Policy Information:</strong>
-   * <strong>Name:</strong> <code>sre-production-access</code>
-   * <strong>Description:</strong> <code>SRE access to production compartment resources</code>
-   * <strong>Compartment:</strong> Select your production compartment</p>
+<p><strong>Policy Information:</strong></p>
 </li>
+</ol>
+<ul>
+<li><strong>Name:</strong> <code>sre-production-access</code></li>
+<li><strong>Description:</strong> <code>SRE access to production compartment resources</code></li>
+<li><strong>Compartment:</strong> Select your production compartment</li>
+</ul>
+<ol start="4">
 <li>
 <p><strong>Policy Statements:</strong>
    <div class="highlight"><pre><span></span><code>Allow group sre-engineers to read all-resources in compartment &lt;compartment-name&gt;
@@ -2683,17 +2764,15 @@ Allow group sre-engineers to inspect work-requests in tenancy
 </ol>
 <hr />
 <h2 id="6-troubleshooting">6. Troubleshooting<a class="headerlink" href="#6-troubleshooting" title="Permanent link">&para;</a></h2>
+<h4 id="access-denied-errors">Access Denied Errors:<a class="headerlink" href="#access-denied-errors" title="Permanent link">&para;</a></h4>
 <ul>
-<li><strong>Access Denied Errors:</strong></li>
 <li>Verify user is in the correct group</li>
 <li>Check policy statements are correct</li>
 <li>Ensure policies are in the correct compartment scope</li>
-<li>
-<p>Verify tenancy vs compartment-level policies</p>
-</li>
-<li>
-<p><strong>Cannot Create Policies:</strong></p>
-</li>
+<li>Verify tenancy vs compartment-level policies</li>
+</ul>
+<h4 id="cannot-create-policies">Cannot Create Policies:<a class="headerlink" href="#cannot-create-policies" title="Permanent link">&para;</a></h4>
+<ul>
 <li>Verify you have IAM policy management permissions</li>
 <li>Check you&rsquo;re in the correct compartment</li>
 <li>Ensure you&rsquo;re using the default domain</li>

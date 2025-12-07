@@ -677,10 +677,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#step-4-verify-python-sdk-availability" class="md-nav__link">
+  <a href="#step-4-set-up-python-virtual-environment" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Step 4: Verify Python SDK Availability
+        Step 4: Set Up Python Virtual Environment
       
     </span>
   </a>
@@ -688,10 +688,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#step-5-test-oci-cli-access" class="md-nav__link">
+  <a href="#step-5-verify-python-sdk-availability" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Step 5: Test OCI CLI Access
+        Step 5: Verify Python SDK Availability
       
     </span>
   </a>
@@ -699,10 +699,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#step-6-test-python-sdk-access" class="md-nav__link">
+  <a href="#step-6-test-oci-cli-access" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Step 6: Test Python SDK Access
+        Step 6: Test OCI CLI Access
       
     </span>
   </a>
@@ -710,10 +710,21 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#step-7-create-useful-aliases-optional" class="md-nav__link">
+  <a href="#step-7-test-python-sdk-access" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Step 7: Create Useful Aliases (Optional)
+        Step 7: Test Python SDK Access
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-8-create-useful-aliases-optional" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 8: Create Useful Aliases (Optional)
       
     </span>
   </a>
@@ -2272,10 +2283,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#step-4-verify-python-sdk-availability" class="md-nav__link">
+  <a href="#step-4-set-up-python-virtual-environment" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Step 4: Verify Python SDK Availability
+        Step 4: Set Up Python Virtual Environment
       
     </span>
   </a>
@@ -2283,10 +2294,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#step-5-test-oci-cli-access" class="md-nav__link">
+  <a href="#step-5-verify-python-sdk-availability" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Step 5: Test OCI CLI Access
+        Step 5: Verify Python SDK Availability
       
     </span>
   </a>
@@ -2294,10 +2305,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#step-6-test-python-sdk-access" class="md-nav__link">
+  <a href="#step-6-test-oci-cli-access" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Step 6: Test Python SDK Access
+        Step 6: Test OCI CLI Access
       
     </span>
   </a>
@@ -2305,10 +2316,21 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#step-7-create-useful-aliases-optional" class="md-nav__link">
+  <a href="#step-7-test-python-sdk-access" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Step 7: Create Useful Aliases (Optional)
+        Step 7: Test Python SDK Access
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-8-create-useful-aliases-optional" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 8: Create Useful Aliases (Optional)
       
     </span>
   </a>
@@ -2376,9 +2398,11 @@
 <hr />
 <h2 id="0-deployment-assumptions">0. Deployment Assumptions<a class="headerlink" href="#0-deployment-assumptions" title="Permanent link">&para;</a></h2>
 <p>For this hands-on lab, you will configure OCI Cloud Shell and SDKs on your own OCI account.</p>
-<p><strong>Prerequisites:</strong>
-* OCI tenancy with user account
-* Browser access to OCI Console</p>
+<p><strong>Prerequisites:</strong></p>
+<ul>
+<li>OCI tenancy with user account</li>
+<li>Browser access to OCI Console</li>
+</ul>
 <hr />
 <h2 id="1-purpose">1. Purpose<a class="headerlink" href="#1-purpose" title="Permanent link">&para;</a></h2>
 <p>OCI Cloud Shell provides a browser-based terminal environment with pre-configured OCI CLI and SDKs. This lab shows you how to access and configure Cloud Shell for SRE automation tasks.</p>
@@ -2409,34 +2433,55 @@
 <p>If OCI CLI is not configured, run:</p>
 <div class="highlight"><pre><span></span><code>oci<span class="w"> </span>setup<span class="w"> </span>config
 </code></pre></div>
-<p>Follow the prompts:
-* <strong>Enter location for config file:</strong> Press Enter (default: <code>~/.oci/config</code>)
-* <strong>Enter a user OCID:</strong> Your user OCID (found in User Settings → User Information)
-* <strong>Enter a tenancy OCID:</strong> Your tenancy OCID (found in Administration → Tenancy Details)
-* <strong>Enter a region:</strong> Select a region (e.g., <code>us-ashburn-1</code>)
-* <strong>Generate API signing key:</strong> Press Enter to generate automatically
-* <strong>Enter passphrase:</strong> Set a passphrase or press Enter for no passphrase</p>
-<h4 id="step-4-verify-python-sdk-availability">Step 4: Verify Python SDK Availability<a class="headerlink" href="#step-4-verify-python-sdk-availability" title="Permanent link">&para;</a></h4>
+<p>Follow the prompts:</p>
+<ul>
+<li><strong>Enter location for config file:</strong> Press Enter (default: <code>~/.oci/config</code>)</li>
+<li><strong>Enter a user OCID:</strong> Your user OCID (found in User Settings → User Information)</li>
+<li><strong>Enter a tenancy OCID:</strong> Your tenancy OCID (found in Administration → Tenancy Details)</li>
+<li><strong>Enter a region:</strong> Select a region (e.g., <code>us-ashburn-1</code>)</li>
+<li><strong>Generate API signing key:</strong> Press Enter to generate automatically</li>
+<li><strong>Enter passphrase:</strong> Set a passphrase or press Enter for no passphrase</li>
+</ul>
+<h4 id="step-4-set-up-python-virtual-environment">Step 4: Set Up Python Virtual Environment<a class="headerlink" href="#step-4-set-up-python-virtual-environment" title="Permanent link">&para;</a></h4>
 <ol>
 <li>
-<p>Check Python version:
+<p><strong>Check Python version:</strong>
    <div class="highlight"><pre><span></span><code>python3<span class="w"> </span>--version
 </code></pre></div>
    Expected: Python 3.8 or later</p>
 </li>
 <li>
-<p>Verify OCI Python SDK:
-   <div class="highlight"><pre><span></span><code>python3<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;import oci; print(oci.__version__)&quot;</span>
-</code></pre></div>
-   Expected: OCI SDK version number</p>
+<p><strong>Create a virtual environment:</strong>
+   <div class="highlight"><pre><span></span><code>python3<span class="w"> </span>-m<span class="w"> </span>venv<span class="w"> </span>~/oci-env
+</code></pre></div></p>
 </li>
 <li>
-<p>If SDK is not installed, install it:
-   <div class="highlight"><pre><span></span><code>pip3<span class="w"> </span>install<span class="w"> </span>oci<span class="w"> </span>--user
+<p><strong>Activate the virtual environment:</strong>
+   <div class="highlight"><pre><span></span><code><span class="nb">source</span><span class="w"> </span>~/oci-env/bin/activate
+</code></pre></div>
+   Your prompt should now show <code>(oci-env)</code> indicating the virtual environment is active.</p>
+</li>
+<li>
+<p><strong>Install OCI Python SDK in the virtual environment:</strong>
+   <div class="highlight"><pre><span></span><code>pip<span class="w"> </span>install<span class="w"> </span>oci
 </code></pre></div></p>
 </li>
 </ol>
-<h4 id="step-5-test-oci-cli-access">Step 5: Test OCI CLI Access<a class="headerlink" href="#step-5-test-oci-cli-access" title="Permanent link">&para;</a></h4>
+<h4 id="step-5-verify-python-sdk-availability">Step 5: Verify Python SDK Availability<a class="headerlink" href="#step-5-verify-python-sdk-availability" title="Permanent link">&para;</a></h4>
+<ol>
+<li>
+<p><strong>Verify OCI Python SDK is installed:</strong>
+   <div class="highlight"><pre><span></span><code>python3<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;import oci; print(f&#39;OCI SDK version: {oci.__version__}&#39;)&quot;</span>
+</code></pre></div>
+   Expected: OCI SDK version number (e.g., <code>OCI SDK version: 2.x.x</code>)</p>
+</li>
+<li>
+<p><strong>Note:</strong> Always activate the virtual environment before using Python SDK:
+   <div class="highlight"><pre><span></span><code><span class="nb">source</span><span class="w"> </span>~/oci-env/bin/activate
+</code></pre></div></p>
+</li>
+</ol>
+<h4 id="step-6-test-oci-cli-access">Step 6: Test OCI CLI Access<a class="headerlink" href="#step-6-test-oci-cli-access" title="Permanent link">&para;</a></h4>
 <ol>
 <li>
 <p>List compartments:
@@ -2451,9 +2496,17 @@
    Replace <code>&lt;compartment-ocid&gt;</code> with a compartment OCID from previous step</p>
 </li>
 </ol>
-<h4 id="step-6-test-python-sdk-access">Step 6: Test Python SDK Access<a class="headerlink" href="#step-6-test-python-sdk-access" title="Permanent link">&para;</a></h4>
-<p>Create a test script:</p>
-<div class="highlight"><pre><span></span><code>cat<span class="w"> </span>&gt;<span class="w"> </span>~/test_oci_sdk.py<span class="w"> </span><span class="s">&lt;&lt; &#39;EOF&#39;</span>
+<h4 id="step-7-test-python-sdk-access">Step 7: Test Python SDK Access<a class="headerlink" href="#step-7-test-python-sdk-access" title="Permanent link">&para;</a></h4>
+<p><strong>Important:</strong> Ensure the virtual environment is activated before running Python scripts.</p>
+<ol>
+<li>
+<p><strong>Activate virtual environment (if not already active):</strong>
+   <div class="highlight"><pre><span></span><code><span class="nb">source</span><span class="w"> </span>~/oci-env/bin/activate
+</code></pre></div></p>
+</li>
+<li>
+<p><strong>Create a test script:</strong>
+   <div class="highlight"><pre><span></span><code>cat<span class="w"> </span>&gt;<span class="w"> </span>~/test_oci_sdk.py<span class="w"> </span><span class="s">&lt;&lt; &#39;EOF&#39;</span>
 <span class="s">#!/usr/bin/env python3</span>
 <span class="s">import oci</span>
 
@@ -2473,11 +2526,21 @@
 <span class="s">for compartment in response.data:</span>
 <span class="s">    print(f&quot;  - {compartment.name} ({compartment.id})&quot;)</span>
 <span class="s">EOF</span>
-
-python3<span class="w"> </span>~/test_oci_sdk.py
-</code></pre></div>
+</code></pre></div></p>
+</li>
+<li>
+<p><strong>Make script executable:</strong>
+   <div class="highlight"><pre><span></span><code>chmod<span class="w"> </span>+x<span class="w"> </span>~/test_oci_sdk.py
+</code></pre></div></p>
+</li>
+<li>
+<p><strong>Run the test script:</strong>
+   <div class="highlight"><pre><span></span><code>python3<span class="w"> </span>~/test_oci_sdk.py
+</code></pre></div></p>
+</li>
+</ol>
 <p>Expected: List of compartments in your tenancy</p>
-<h4 id="step-7-create-useful-aliases-optional">Step 7: Create Useful Aliases (Optional)<a class="headerlink" href="#step-7-create-useful-aliases-optional" title="Permanent link">&para;</a></h4>
+<h4 id="step-8-create-useful-aliases-optional">Step 8: Create Useful Aliases (Optional)<a class="headerlink" href="#step-8-create-useful-aliases-optional" title="Permanent link">&para;</a></h4>
 <p>Add aliases to your <code>~/.bashrc</code> for common OCI operations:</p>
 <div class="highlight"><pre><span></span><code>cat<span class="w"> </span>&gt;&gt;<span class="w"> </span>~/.bashrc<span class="w"> </span><span class="s">&lt;&lt; &#39;EOF&#39;</span>
 
@@ -2494,7 +2557,8 @@ python3<span class="w"> </span>~/test_oci_sdk.py
 <ul>
 <li>Cloud Shell terminal accessible from OCI Console</li>
 <li>OCI CLI working and configured</li>
-<li>Python SDK installed and importable</li>
+<li>Python virtual environment created and activated</li>
+<li>OCI Python SDK installed in virtual environment</li>
 <li>Successful API calls to list compartments and instances</li>
 </ul>
 <hr />
@@ -2503,14 +2567,17 @@ python3<span class="w"> </span>~/test_oci_sdk.py
 <li><strong>Cloud Shell won&rsquo;t start:</strong> Check browser console for errors, try refreshing</li>
 <li><strong>OCI CLI not configured:</strong> Run <code>oci setup config</code> again</li>
 <li><strong>Permission denied:</strong> Verify your user has appropriate IAM policies</li>
-<li><strong>Python SDK not found:</strong> Install with <code>pip3 install oci --user</code></li>
+<li><strong>Python SDK not found:</strong> Ensure virtual environment is activated, then install with <code>pip install oci</code></li>
+<li><strong>ModuleNotFoundError:</strong> Make sure you&rsquo;ve activated the virtual environment with <code>source ~/oci-env/bin/activate</code></li>
 </ul>
 <hr />
 <h2 id="5-key-takeaways">5. Key Takeaways<a class="headerlink" href="#5-key-takeaways" title="Permanent link">&para;</a></h2>
 <ul>
 <li>Cloud Shell provides immediate access to OCI CLI and SDKs without local installation</li>
+<li>Virtual environments isolate Python packages and prevent conflicts</li>
 <li>OCI CLI enables automation of infrastructure management tasks</li>
 <li>Python SDK provides programmatic access to OCI services for custom automation</li>
+<li>Always activate virtual environment before using Python SDK</li>
 <li>These tools will be used throughout the training for SRE automation tasks</li>
 </ul>
 
