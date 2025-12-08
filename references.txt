@@ -10,4 +10,7 @@ https://www.oracle.com/in/cloud/sign-in.html
 Cloud Account Name: subsacadwizz
 
 
-AnfYzu9EA4M1
+http://155.248.254.23/
+ADMIN_EMAIL=admin@bharatmart.com
+ADMIN_PASSWORD=Admin@123
+
