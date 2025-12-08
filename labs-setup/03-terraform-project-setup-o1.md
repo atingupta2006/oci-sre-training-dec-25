@@ -120,6 +120,15 @@ Copy the full string into terraform.tfvars.
 
 ---
 
+```
+cd
+git clone https://github.com/atingupta2006/oci-multi-tier-web-app-ecommerce.git
+cd oci-multi-tier-web-app-ecommerce
+cd deployment/terraform/option-1
+cp terraform.tfvars.example terraform.tfvars
+nano terraform.tfvars
+```
+
 # =========================================================
 
 # **3. Update terraform.tfvars**
