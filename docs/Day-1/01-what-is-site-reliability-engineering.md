@@ -107,16 +107,16 @@ The platform implements all three pillars of observability:
 
 ```
 BharatMart Application (Express.js API)
-  | \
-  |  \
- Logs Metrics Traces
-  |    |       |
-  v    v       v
+  |        \            \
+  |         \            \
+ Logs     Metrics       Traces
+  |          |            |
+  v          v            v
 Winston  Prometheus  OpenTelemetry
-  |         |            |
-  v         v            v
-logs/    /metrics     OTLP Endpoint
-api.log  endpoint      (optional)
+  |         |            
+  v         v            
+logs/    /metrics     
+api.log  endpoint     
 ```
 
 #### Key Observability Features
