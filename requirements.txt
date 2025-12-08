@@ -4,3 +4,4 @@ mkdocs-gen-files>=0.5.0
 mkdocs-literate-nav>=0.6.1
 mkdocs-section-index>=0.3.5
 pymdown-extensions>=10.7
+mkdocs-exclude>=1.0.2

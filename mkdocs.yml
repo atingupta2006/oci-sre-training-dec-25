@@ -32,6 +32,14 @@ plugins:
         - en
       separator: '[\\s\\-.]+'
   - tags                           # ⬅️ for tagging pages (Material-native)
+  - exclude:
+      glob:
+        - "*.tmp"
+        - "*.bak"
+        - "recycled/*"
+        - "recycled/**"
+        - "uploads/private/*"
+
 
 markdown_extensions:
   - extra
@@ -79,10 +87,3 @@ extra:
 
   tags:
     enabled: true                 # ⬅️ uses "tags" plugin
-
-exclude:
-  - "*.tmp"
-  - "*.bak"
-  - "drafts/*"
-  - "uploads/private/*"
-  - "recycled/*"
