@@ -147,7 +147,7 @@ environment          = "dev"
 # =========================================================
 
 ```bash
-cd ~/oci-multi-tier-web-app-ecommerce/deployment/terraform
+cd ~/oci-multi-tier-web-app-ecommerce/deployment/terraform/option-1
 ```
 
 ---
