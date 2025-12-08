@@ -79,3 +79,10 @@ extra:
 
   tags:
     enabled: true                 # ⬅️ uses "tags" plugin
+
+exclude:
+  - "*.tmp"
+  - "*.bak"
+  - "drafts/*"
+  - "uploads/private/*"
+  - "docs/recycled/*"
