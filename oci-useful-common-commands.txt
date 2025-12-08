@@ -1,0 +1,8 @@
+oci --version
+oci iam region list
+oci iam user list --all
+oci iam group list --all
+oci --help
+oci compute instance --help
+oci compute instance list
+oci compute instance list --compartment-id ocid1.compartment.oc1..aaaaaaaavzlulwgc4twmrqqfsb5jack4i6cgq3t6yzc2rwhslppf53rrbb5q
