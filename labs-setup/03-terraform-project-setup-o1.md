@@ -112,6 +112,7 @@ oci iam availability-domain list \
 ### **2.5 Get SSH public key**
 
 ```bash
+ssh-keygen -t rsa -b 4096
 cat ~/.ssh/id_rsa.pub
 ```
 
