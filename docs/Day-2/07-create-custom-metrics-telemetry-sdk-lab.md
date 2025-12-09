@@ -218,7 +218,7 @@ def main():
     import time
     while True:
         process_metrics()
-        time.sleep(30)  # run every 30 seconds
+        time.sleep(10)  # run every 10 seconds
 
 if __name__ == "__main__":
     main()
@@ -312,34 +312,32 @@ BACKEND="http://<vm-ip>:3000"
 ### **Execute Load Generator**
 
 ```bash
-for i in {1..10000}; do
-  curl -s -o /dev/null $BACKEND/;
-  curl -s -o /dev/null $BACKEND/health;
-  curl -s -o /dev/null $BACKEND/metrics;
+for i in {1..1000000}; do
+  curl -s -o /dev/null $BACKEND/ 
+  curl -s -o /dev/null $BACKEND/health &
+  curl -s -o /dev/null $BACKEND/metrics
 
-  curl -s -o /dev/null $BACKEND/api/products;
-  curl -s -o /dev/null $BACKEND/api/orders;
-  curl -s -o /dev/null $BACKEND/api/users;
-  curl -s -o /dev/null $BACKEND/api/cart;
-  curl -s -o /dev/null $BACKEND/api/metrics;
-  curl -s -o /dev/null $BACKEND/api/status;
+  curl -s -o /dev/null $BACKEND/api/products
+  curl -s -o /dev/null $BACKEND/api/orders
+  curl -s -o /dev/null $BACKEND/api/users &
+  curl -s -o /dev/null $BACKEND/api/cart &
+  curl -s -o /dev/null $BACKEND/api/status
 
-  curl -s -o /dev/null -X POST $BACKEND/api/orders;
-  curl -s -o /dev/null -X POST $BACKEND/api/users;
+  curl -s -o /dev/null -X POST $BACKEND/api/orders &
+  curl -s -o /dev/null -X POST $BACKEND/api/users
 
-  curl -s -o /dev/null $BACKEND/not-found;
-  curl -s -o /dev/null $BACKEND/does/not/exist;
-  curl -s -o /dev/null $BACKEND/.env;
-  curl -s -o /dev/null $BACKEND/.git/config;
-  curl -s -o /dev/null $BACKEND/api/invalid/route;
-  curl -s -o /dev/null $BACKEND/metric;
-  curl -s -o /dev/null $BACKEND/api/metric;
+  curl -s -o /dev/null $BACKEND/not-found &
+  curl -s -o /dev/null $BACKEND/does/not/exist &
+  curl -s -o /dev/null $BACKEND/.git/config
 
-  PROD_ID=$(shuf -i 1-500 -n 1);
-  curl -s -o /dev/null $BACKEND/api/products/$PROD_ID;
+  PROD_ID=$(shuf -i 1-500 -n 1)
+  curl -s -o /dev/null $BACKEND/api/products/$PROD_ID &
 
-  sleep 0.02;
+  ((i%200==0)) && wait
+
 done
+
+wait
 ```
 
 This produces real operational and business metric activity.
