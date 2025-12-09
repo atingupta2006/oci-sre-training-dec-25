@@ -2,54 +2,94 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
     <url>
          <loc>https://your-site-url.com/</loc>
-         <lastmod>2025-12-08</lastmod>
+         <lastmod>2025-12-09</lastmod>
     </url>
     <url>
          <loc>https://your-site-url.com/bookmarks/</loc>
-         <lastmod>2025-12-08</lastmod>
+         <lastmod>2025-12-09</lastmod>
     </url>
     <url>
          <loc>https://your-site-url.com/Day-1/</loc>
-         <lastmod>2025-12-08</lastmod>
+         <lastmod>2025-12-09</lastmod>
     </url>
     <url>
          <loc>https://your-site-url.com/Day-1/01-what-is-site-reliability-engineering/</loc>
-         <lastmod>2025-12-08</lastmod>
+         <lastmod>2025-12-09</lastmod>
     </url>
     <url>
          <loc>https://your-site-url.com/Day-1/02-history-of-sre/</loc>
-         <lastmod>2025-12-08</lastmod>
+         <lastmod>2025-12-09</lastmod>
     </url>
     <url>
          <loc>https://your-site-url.com/Day-1/03-sre-vs-devops-vs-platform-engineering/</loc>
-         <lastmod>2025-12-08</lastmod>
+         <lastmod>2025-12-09</lastmod>
     </url>
     <url>
          <loc>https://your-site-url.com/Day-1/04-principles-of-sre-sli-slo-error-budget/</loc>
-         <lastmod>2025-12-08</lastmod>
+         <lastmod>2025-12-09</lastmod>
     </url>
     <url>
          <loc>https://your-site-url.com/Day-1/05-oci-architecture-overview/</loc>
-         <lastmod>2025-12-08</lastmod>
+         <lastmod>2025-12-09</lastmod>
     </url>
     <url>
          <loc>https://your-site-url.com/Day-1/06-multi-region-oci-tenancy-demo/</loc>
-         <lastmod>2025-12-08</lastmod>
+         <lastmod>2025-12-09</lastmod>
     </url>
     <url>
          <loc>https://your-site-url.com/Day-1/07-terraform-compute-instances-demo/</loc>
-         <lastmod>2025-12-08</lastmod>
+         <lastmod>2025-12-09</lastmod>
     </url>
     <url>
          <loc>https://your-site-url.com/Day-1/08-configure-cloud-shell-sdks-lab/</loc>
-         <lastmod>2025-12-08</lastmod>
+         <lastmod>2025-12-09</lastmod>
     </url>
     <url>
          <loc>https://your-site-url.com/Day-1/09-identity-domains-iam-policies-lab/</loc>
-         <lastmod>2025-12-08</lastmod>
+         <lastmod>2025-12-09</lastmod>
+    </url>
+    <url>
+         <loc>https://your-site-url.com/Day-2/</loc>
+         <lastmod>2025-12-09</lastmod>
+    </url>
+    <url>
+         <loc>https://your-site-url.com/Day-2/01-defining-slis-slos-cloud-native/</loc>
+         <lastmod>2025-12-09</lastmod>
+    </url>
+    <url>
+         <loc>https://your-site-url.com/Day-2/02-error-budgets-policy-enforcement/</loc>
+         <lastmod>2025-12-09</lastmod>
+    </url>
+    <url>
+         <loc>https://your-site-url.com/Day-2/03-oci-integrates-sre-principles/</loc>
+         <lastmod>2025-12-09</lastmod>
+    </url>
+    <url>
+         <loc>https://your-site-url.com/Day-2/04-define-sli-slos-demo/</loc>
+         <lastmod>2025-12-09</lastmod>
+    </url>
+    <url>
+         <loc>https://your-site-url.com/Day-2/05-error-budget-breach-simulation-demo/</loc>
+         <lastmod>2025-12-09</lastmod>
+    </url>
+    <url>
+         <loc>https://your-site-url.com/Day-2/06-setup-oci-monitoring-lab/</loc>
+         <lastmod>2025-12-09</lastmod>
+    </url>
+    <url>
+         <loc>https://your-site-url.com/Day-2/07-create-custom-metrics-telemetry-sdk-lab/</loc>
+         <lastmod>2025-12-09</lastmod>
+    </url>
+    <url>
+         <loc>https://your-site-url.com/Day-2/08-implement-alerting-workflows-lab/</loc>
+         <lastmod>2025-12-09</lastmod>
+    </url>
+    <url>
+         <loc>https://your-site-url.com/Day-2/09-dashboards-visualization-lab/</loc>
+         <lastmod>2025-12-09</lastmod>
     </url>
     <url>
          <loc>https://your-site-url.com/Presentation/</loc>
-         <lastmod>2025-12-08</lastmod>
+         <lastmod>2025-12-09</lastmod>
     </url>
 </urlset>
