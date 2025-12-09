@@ -1,328 +1,371 @@
-# Day 2: Create Custom Metrics Using OCI Telemetry SDKs - Hands-on Lab
+# **Day 2: Create Custom Metrics Using OCI Telemetry SDKs — Hands-On Lab**
 
-### Audience Context: IT Engineers and Developers
+### **Audience:** IT Engineers, Developers, SREs
 
----
+### **Theme:** Exporting Prometheus Metrics to OCI Monitoring
 
-## 0. Deployment Assumptions
-
-For this hands-on lab, you will integrate BharatMart's Prometheus metrics with OCI Monitoring using the OCI Telemetry SDK.
-
-**Prerequisites:**
-* OCI tenancy with appropriate permissions
-* BharatMart running and exposing metrics at `/metrics` endpoint
-* OCI SDK installed (Python or other)
-* Access to OCI Console
+### **Objective:** Build and run a continuous metrics ingestion pipeline
 
 ---
 
-## 1. Objective of This Hands-On
+# **0. Deployment Assumptions**
 
-By completing this exercise, students will:
+This hands-on lab demonstrates how to integrate **BharatMart's Prometheus metrics** with **OCI Monitoring** using the OCI Telemetry SDK.
 
-* Understand how to send custom application metrics to OCI Monitoring
-* Use OCI Telemetry SDK to post metrics from BharatMart application
-* View custom metrics in OCI Metric Explorer
-* Integrate application metrics with infrastructure metrics for complete observability
+### **Prerequisites**
 
----
-
-## 2. Background
-
-BharatMart exposes Prometheus-format metrics at `/metrics` endpoint:
-- `http_request_duration_seconds` - Request latency histogram
-- `http_requests_total` - Request counts with status codes
-- `orders_created_total`, `orders_success_total`, `orders_failed_total` - Business metrics
-- `payments_processed_total` - Payment metrics
-
-These metrics can be sent to OCI Monitoring as custom metrics using the OCI Telemetry SDK, enabling unified observability.
+* Ubuntu VM with Python 3.8+
+* BharatMart backend exposing metrics at:
+  `http://<vm-ip>:3000/metrics`
+* OCI user credentials configured in `~/.oci/config`
+* Internet access to OCI Telemetry ingestion endpoint
 
 ---
 
-## 3. Hands-On Task 1 — Prepare OCI Configuration
+# **1. Lab Objectives**
 
-#### Purpose
+By completing this module, learners will:
 
-Set up OCI SDK configuration for posting custom metrics.
-
-### Steps:
-
-1. **Ensure OCI SDK is installed:**
-   ```bash
-   python3 -c "import oci; print(oci.__version__)"
-   ```
-
-2. **Verify OCI configuration:**
-   ```bash
-   cat ~/.oci/config
-   ```
-   Should show your tenancy OCID, user OCID, region, etc.
-
-3. **Get Compartment OCID:**
-   ```bash
-   oci iam compartment list --compartment-id-in-subtree true --all | grep "<your-compartment-name>"
-   ```
-   Note the compartment OCID for later use.
+* Understand Prometheus metric structure
+* Parse Prometheus metric families using official parser
+* Transform metrics into OCI custom metric format
+* Implement a continuous metrics ingestion loop
+* Push custom metrics to OCI Monitoring
+* Generate realistic traffic to populate time-series data
+* View application and business metrics in Metric Explorer
 
 ---
 
-## 4. Hands-On Task 2 — Create Script to Post Custom Metrics
+# **2. Background**
 
-#### Purpose
+BharatMart exposes a wide range of operational and business metrics using Prometheus format.
 
-Create a Python script that reads BharatMart metrics and posts them to OCI Monitoring.
+### **Performance Metrics**
 
-### Steps:
+* `http_requests_total`
+* `http_request_duration_seconds` (histogram)
+* `external_call_latency_ms` (histogram)
 
-> **📝 Note: Repository Script Available**
-> 
-> A complete, production-ready version of this script is available in the application repository at `scripts/oci-telemetry-metrics-ingestion.py` with additional features like:
-> - Command-line argument parsing (`--compartment-id`, `--metrics-endpoint`, etc.)
-> - Enhanced error handling and logging
-> - Environment variable support
-> - Better Prometheus metric parsing
-> 
-> You can use the repository script directly, or follow the steps below to create your own version (recommended for learning).
-> 
-> **To use the repository script:**
-> ```bash
-> export OCI_COMPARTMENT_ID=ocid1.compartment.oc1...
-> export METRICS_ENDPOINT=http://localhost:3000/metrics
-> python3 scripts/oci-telemetry-metrics-ingestion.py
-> ```
-> 
-> See `scripts/oci-telemetry-metrics-ingestion.py` for full documentation.
+### **Business Metrics**
 
-1. **Create metrics ingestion script:**
+* `orders_created_total`
+* `orders_success_total`
+* `orders_failed_total`
+* `payments_processed_total`
 
-   Create your own script to learn the implementation details:
-   ```bash
-   cat > ~/bharatmart-metrics-to-oci.py << 'EOF'
-   #!/usr/bin/env python3
-   import oci
-   import requests
-   import re
-   from datetime import datetime
-   import time
-   
-   # Load OCI config
-   config = oci.config.from_file()
-   monitoring = oci.monitoring.MonitoringClient(config)
-   
-   # Configuration
-   COMPARTMENT_OCID = "<your-compartment-ocid>"
-   METRICS_ENDPOINT = "http://localhost:3000/metrics"
-   NAMESPACE = "custom.bharatmart"
-   
-   def parse_prometheus_metrics(prometheus_text):
-       """Parse Prometheus format metrics from /metrics endpoint"""
-       metrics = {}
-       for line in prometheus_text.split('\n'):
-           if line.startswith('#') or not line.strip():
-               continue
-           
-           # Parse metric line: name{labels} value timestamp
-           match = re.match(r'(\w+)(?:\{([^}]+)\})?\s+([\d.]+)', line)
-           if match:
-               name = match.group(1)
-               labels = match.group(2) if match.group(2) else ""
-               value = float(match.group(3))
-               
-               metrics[name] = {
-                   'value': value,
-                   'labels': labels
-               }
-       return metrics
-   
-   def post_metric_to_oci(metric_name, value, dimensions=None):
-       """Post a single metric to OCI Monitoring"""
-       if dimensions is None:
-           dimensions = {}
-       
-       metric_data = oci.monitoring.models.MetricData(
-           namespace=NAMESPACE,
-           name=metric_name,
-           dimensions=dimensions,
-           datapoints=[
-               oci.monitoring.models.Datapoint(
-                   timestamp=datetime.utcnow(),
-                   value=value
-               )
-           ]
-       )
-       
-       post_metric_details = oci.monitoring.models.PostMetricDataDetails(
-           metric_data=[metric_data]
-       )
-       
-       try:
-           response = monitoring.post_metric_data(
-               post_metric_data_details=post_metric_details,
-               compartment_id=COMPARTMENT_OCID
-           )
-           print(f"Posted {metric_name} = {value}")
-           return response
-       except Exception as e:
-           print(f"Error posting {metric_name}: {e}")
-           return None
-   
-   def main():
-       print("Fetching metrics from BharatMart...")
-       response = requests.get(METRICS_ENDPOINT)
-       
-       if response.status_code != 200:
-           print(f"Error fetching metrics: {response.status_code}")
-           return
-       
-       metrics = parse_prometheus_metrics(response.text)
-       
-       # Post key metrics to OCI Monitoring
-       print(f"\nPosting metrics to OCI Monitoring (namespace: {NAMESPACE})...")
-       
-       # HTTP Request Duration (latency)
-       if 'http_request_duration_seconds_sum' in metrics:
-           latency_sum = metrics['http_request_duration_seconds_sum']['value']
-           if 'http_request_duration_seconds_count' in metrics:
-               count = metrics['http_request_duration_seconds_count']['value']
-               if count > 0:
-                   avg_latency = latency_sum / count
-                   post_metric_to_oci('api_latency_seconds', avg_latency)
-       
-       # HTTP Requests Total (by status code)
-       for metric_name, metric_data in metrics.items():
-           if metric_name.startswith('http_requests_total'):
-               value = metric_data['value']
-               # Extract status code from labels if present
-               dimensions = {}
-               labels = metric_data['labels']
-               if labels:
-                   for label_pair in labels.split(','):
-                       if '=' in label_pair:
-                           k, v = label_pair.split('=')
-                           dimensions[k.strip()] = v.strip().strip('"')
-               
-               post_metric_to_oci('http_requests_total', value, dimensions)
-       
-       # Business metrics
-       for metric_name in ['orders_created_total', 'orders_success_total', 'orders_failed_total']:
-           if metric_name in metrics:
-               post_metric_to_oci(metric_name, metrics[metric_name]['value'])
-       
-       print("\nMetrics posted successfully!")
-   
-   if __name__ == '__main__':
-       main()
-   EOF
-   ```
+### **Resilience Metrics**
 
-2. **Update compartment OCID in script:**
-   ```bash
-   sed -i "s|<your-compartment-ocid>|$(oci iam compartment list --compartment-id-in-subtree true --all --query 'data[?name==\"<your-compartment>\"].id' --raw-output)|" ~/bharatmart-metrics-to-oci.py
-   ```
+* `chaos_events_total`
+* `service_restarts_total`
 
-3. **Make script executable:**
-   ```bash
-   chmod +x ~/bharatmart-metrics-to-oci.py
-   ```
+### **System Metrics**
+
+* `simulated_latency_ms`
+
+To make these metrics available in OCI Monitoring, they must be:
+
+1. **Fetched** from the `/metrics` endpoint
+2. **Parsed** into metric families
+3. **Converted** into OCI Telemetry ingestion format
+4. **Continuously pushed** to OCI Monitoring
 
 ---
 
-## 5. Hands-On Task 3 — Run Metrics Ingestion Script
+# **3. Hands-On Task 1 — Prepare Environment**
 
-#### Purpose
+### **Step 1 — Validate OCI Configuration**
 
-Execute the script to post BharatMart metrics to OCI Monitoring.
+```bash
+cat ~/.oci/config
+```
 
-### Steps:
+Ensure the file contains:
 
-1. **Run the script:**
-   ```bash
-   python3 ~/bharatmart-metrics-to-oci.py
-   ```
-
-2. **Verify output:**
-   Should see messages like:
-   ```
-   Fetching metrics from BharatMart...
-   Posting metrics to OCI Monitoring (namespace: custom.bharatmart)...
-   Posted api_latency_seconds = 0.123
-   Posted http_requests_total = 1500
-   Posted orders_created_total = 45
-   Metrics posted successfully!
-   ```
-
-3. **Set up periodic execution (optional):**
-   ```bash
-   # Add to crontab to run every 1 minute
-   crontab -e
-   # Add line:
-   */1 * * * * /usr/bin/python3 ~/bharatmart-metrics-to-oci.py >> /var/log/bharatmart-metrics.log 2>&1
-   ```
+* tenancy OCID
+* user OCID
+* fingerprint
+* private key
+* region
 
 ---
 
-## 6. Hands-On Task 4 — View Custom Metrics in OCI Monitoring
+### **Step 2 — Identify the Application Compartment**
 
-#### Purpose
+```bash
+oci iam compartment list --compartment-id-in-subtree true --all
+```
 
-Verify that custom metrics are available in OCI Metric Explorer.
-
-### Steps:
-
-1. **Access Metric Explorer:**
-   - Open **OCI Console** → **Observability & Management** → **Monitoring** → **Metric Explorer**
-
-2. **Select Custom Namespace:**
-   - **Namespace:** `custom.bharatmart`
-   - **Compartment:** Select your compartment
-
-3. **View Available Metrics:**
-   - Should see metrics like:
-     - `api_latency_seconds`
-     - `http_requests_total`
-     - `orders_created_total`
-     - `orders_success_total`
-     - `orders_failed_total`
-
-4. **Create Query:**
-   - Select metric: `api_latency_seconds`
-   - View graph showing latency over time
+Record the compartment OCID of your environment.
 
 ---
 
-## 7. Summary of the Hands-On
+### **Step 3 — Install Required Python Packages**
 
-Today you:
-
-* Created a script to ingest BharatMart Prometheus metrics into OCI Monitoring
-* Used OCI Telemetry SDK to post custom metrics
-* Verified custom metrics in OCI Metric Explorer
-* Integrated application metrics with infrastructure metrics
-
-These custom metrics enable SLI/SLO definition using actual application behavior.
+```bash
+pip install oci prometheus_client requests
+```
 
 ---
 
-## 8. Next Steps
+# **4. Hands-On Task 2 — Build Prometheus → OCI Metrics Exporter Script**
 
-* Use custom metrics in dashboards (see Dashboard lab)
-* Create alarms based on custom metrics
-* Define SLIs/SLOs using custom metrics
-* Monitor business KPIs (orders, payments) in OCI Monitoring
+This script:
+
+* Fetches Prometheus metrics
+* Parses metric families
+* Extracts counters and gauges
+* Computes averages for histograms from `_sum` and `_count`
+* Sends every metric to OCI Monitoring
+* Runs continuously every 30 seconds
+* Uses namespace `bharatmart` (required — no dots allowed)
 
 ---
 
-## 9. Solutions Key (Instructor Reference)
+## **4.1 Create the Exporter Script**
 
-### Expected Results:
+```bash
+cat > ~/bharatmart-metrics-to-oci.py << 'EOF'
+#!/usr/bin/env python3
 
-* Script successfully posts metrics to OCI Monitoring
-* Custom metrics visible in Metric Explorer under `custom.bharatmart` namespace
-* Metrics updating periodically (if cron job configured)
+import oci
+import requests
+from datetime import datetime, timezone
+from prometheus_client.parser import text_string_to_metric_families
 
-### Troubleshooting:
+# -------------------------------------------------------
+# CONFIGURATION
+# -------------------------------------------------------
+COMPARTMENT_OCID = "<your-compartment-ocid>"
+METRICS_ENDPOINT = "http://localhost:3000/metrics"
+NAMESPACE = "bharatmart"  # Namespace cannot contain dots
 
-* **403 Forbidden:** Check IAM policies allow posting metrics
-* **Metrics not appearing:** Wait 1-2 minutes for metrics to be available
-* **Connection errors:** Verify OCI config and compartment OCID
+# Load OCI configuration
+config = oci.config.from_file()
+
+# Telemetry ingestion endpoint
+region = config["region"]
+telemetry_endpoint = f"https://telemetry-ingestion.{region}.oraclecloud.com"
+
+monitoring = oci.monitoring.MonitoringClient(
+    config,
+    service_endpoint=telemetry_endpoint
+)
+
+# -------------------------------------------------------
+# Publish a single metric to OCI Monitoring
+# -------------------------------------------------------
+def post_metric_to_oci(name, value, dimensions):
+    datapoint = oci.monitoring.models.Datapoint(
+        timestamp=datetime.now(timezone.utc),
+        value=float(value)
+    )
+
+    metric = oci.monitoring.models.MetricDataDetails(
+        name=name,
+        namespace=NAMESPACE,
+        compartment_id=COMPARTMENT_OCID,
+        dimensions={k: str(v) for k, v in dimensions.items()},
+        datapoints=[datapoint],
+    )
+
+    payload = oci.monitoring.models.PostMetricDataDetails(metric_data=[metric])
+    monitoring.post_metric_data(post_metric_data_details=payload)
+
+    print(f"[OK] {name}={value} dims={dimensions}")
+
+# -------------------------------------------------------
+# Metric Processing Logic
+# -------------------------------------------------------
+def process_metrics():
+    print(f"Fetching metrics from {METRICS_ENDPOINT}")
+    response = requests.get(METRICS_ENDPOINT)
+    metrics_text = response.text
+
+    families = list(text_string_to_metric_families(metrics_text))
+    print(f"Parsed {len(families)} Prometheus metric families.")
+
+    for family in families:
+        for sample in family.samples:
+            name = sample.name
+            value = sample.value
+            labels = sample.labels
+
+            # Histogram: compute average from sum and count
+            if name.endswith("_sum"):
+                base = name[:-4]
+                count = next(
+                    (s.value for s in family.samples if s.name == base + "_count"), 
+                    0
+                )
+                if count > 0:
+                    avg = value / count
+                    post_metric_to_oci(f"{base}_avg", avg, labels)
+                continue
+
+            # Ignore histogram buckets
+            if name.endswith("_bucket"):
+                continue
+
+            # Push counters & gauges
+            post_metric_to_oci(name, value, labels)
+
+    print("Metrics ingestion cycle complete.")
+
+# -------------------------------------------------------
+# Continuous Loop
+# -------------------------------------------------------
+def main():
+    import time
+    while True:
+        process_metrics()
+        time.sleep(30)  # run every 30 seconds
+
+if __name__ == "__main__":
+    main()
+EOF
+```
+
+---
+
+## **4.2 Make Script Executable**
+
+```bash
+chmod +x ~/bharatmart-metrics-to-oci.py
+```
+
+---
+
+# **5. Hands-On Task 3 — Run Metrics Export Continuously**
+
+The script includes an internal `while True` loop.
+It automatically:
+
+* Fetches metrics
+* Parses them
+* Pushes them to OCI
+* Sleeps 30 seconds
+* Repeats indefinitely
+
+Run:
+
+```bash
+python3 ~/bharatmart-metrics-to-oci.py
+```
+
+To run continuously in background:
+
+```bash
+nohup python3 ~/bharatmart-metrics-to-oci.py > metrics.log 2>&1 &
+```
+
+---
+
+# **6. How the Exporter Handles “New vs Old” Metrics**
+
+A common question is:
+
+> **How does the exporter know which metrics are new and which were already ingested?**
+
+The exporter requires **no state tracking**, because:
+
+### **1. OCI Monitoring treats each timestamp as a new datapoint**
+
+We always send:
+
+```python
+timestamp=datetime.now(timezone.utc)
+```
+
+Every datapoint is unique.
+
+### **2. Prometheus counters are cumulative**
+
+They always increase, so sending the latest value is correct.
+
+### **3. Gauges represent instantaneous state**
+
+No history required.
+
+### **4. Histogram averages are recomputed fresh each cycle**
+
+### **5. No duplicates are possible**
+
+OCI deduplicates automatically if timestamps match (which they never do).
+
+This is the same approach used by:
+
+* Prometheus exporters
+* Datadog agent
+* Stackdriver sidecar exporters
+* CloudWatch custom metric agents
+
+---
+
+# **7. Hands-On Task 4 — Generate Backend Traffic**
+
+### **Set Backend Endpoint**
+
+```bash
+BACKEND="http://<vm-ip>:3000"
+```
+
+### **Execute Load Generator**
+
+```bash
+for i in {1..10000}; do
+  curl -s -o /dev/null $BACKEND/;
+  curl -s -o /dev/null $BACKEND/health;
+  curl -s -o /dev/null $BACKEND/metrics;
+
+  curl -s -o /dev/null $BACKEND/api/products;
+  curl -s -o /dev/null $BACKEND/api/orders;
+  curl -s -o /dev/null $BACKEND/api/users;
+  curl -s -o /dev/null $BACKEND/api/cart;
+  curl -s -o /dev/null $BACKEND/api/metrics;
+  curl -s -o /dev/null $BACKEND/api/status;
+
+  curl -s -o /dev/null -X POST $BACKEND/api/orders;
+  curl -s -o /dev/null -X POST $BACKEND/api/users;
+
+  curl -s -o /dev/null $BACKEND/not-found;
+  curl -s -o /dev/null $BACKEND/does/not/exist;
+  curl -s -o /dev/null $BACKEND/.env;
+  curl -s -o /dev/null $BACKEND/.git/config;
+  curl -s -o /dev/null $BACKEND/api/invalid/route;
+  curl -s -o /dev/null $BACKEND/metric;
+  curl -s -o /dev/null $BACKEND/api/metric;
+
+  PROD_ID=$(shuf -i 1-500 -n 1);
+  curl -s -o /dev/null $BACKEND/api/products/$PROD_ID;
+
+  sleep 0.02;
+done
+```
+
+This produces real operational and business metric activity.
+
+---
+
+# **8. Hands-On Task 5 — View Metrics in OCI Monitoring**
+
+Navigate to:
+
+**OCI Console → Observability & Management → Monitoring → Metric Explorer**
+
+### **Namespace**
+
+```
+bharatmart
+```
+
+### **Examples to explore**
+
+| Metric                              | Interpretation              |
+| ----------------------------------- | --------------------------- |
+| `http_requests_total`               | Total API traffic           |
+| `http_request_duration_seconds_avg` | Avg latency                 |
+| `external_call_latency_ms_avg`      | External dependency latency |
+| `orders_created_total`              | Order creation rate         |
+| `orders_success_total`              | Successful orders           |
+| `chaos_events_total`                | Chaos engineering events    |
 
