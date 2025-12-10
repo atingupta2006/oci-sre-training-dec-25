@@ -40,7 +40,7 @@ logger = logging.getLogger("backend-metrics-to-oci")
 # Load Shared .env
 # -------------------------------------------------------
 ENV_PATH = "/opt/bharatmart-observability/.env"
-load_dotenv(ENV_PATH)
+load_dotenv()
 
 COMPARTMENT_OCID = os.getenv("COMPARTMENT_OCID")
 if not COMPARTMENT_OCID:

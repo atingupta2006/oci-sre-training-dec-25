@@ -1,11 +1,12 @@
 cd
 git clone https://github.com/atingupta2006/oci-sre-training-dec-25.git
-cd oci-sre-training-dec-25.git
+cd oci-sre-training-dec-25
 python3 -m venv ~/venv
 source ~/venv/bin/activate
 pip install -r requirements.txt
 
-mv env.example .env
+cd labs-setup/oci-logs-collection-scripts/
+mv .env.example .env
 nohup python3 backend-metrics-to-oci.py > metrics.out 2>&1 &
 nohup python3 backend-logs-to-oci.py > backend-logs.out 2>&1 &
 nohup python3 frontend-access-logs-to-oci.py > fe-access.out 2>&1 &

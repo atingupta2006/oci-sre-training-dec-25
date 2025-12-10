@@ -39,7 +39,7 @@ logger = logging.getLogger("nginx-access")
 # Load shared .env
 # -------------------------------------------------------
 ENV_PATH = "./.env"
-load_dotenv(ENV_PATH)
+load_dotenv()
 
 COMPARTMENT_OCID = os.getenv("COMPARTMENT_OCID")
 NGINX_ACCESS_LOG_OCID = os.getenv("NGINX_ACCESS_LOG_OCID")

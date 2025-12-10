@@ -38,7 +38,7 @@ logger = logging.getLogger("nginx-error")
 # Load shared .env
 # -------------------------------------------------------
 ENV_PATH = "./.env"
-load_dotenv(ENV_PATH)
+load_dotenv()
 
 COMPARTMENT_OCID = os.getenv("COMPARTMENT_OCID")
 NGINX_ERROR_LOG_OCID = os.getenv("NGINX_ERROR_LOG_OCID")

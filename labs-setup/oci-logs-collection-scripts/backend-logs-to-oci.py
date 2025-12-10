@@ -38,7 +38,7 @@ logger = logging.getLogger("backend-logs")
 # Load Shared .env File
 # -------------------------------------------------------
 ENV_PATH = "./.env"  # Using current directory as per your requirement
-load_dotenv(ENV_PATH)
+load_dotenv()
 
 COMPARTMENT_OCID = os.getenv("COMPARTMENT_OCID")
 BACKEND_LOG_OCID = os.getenv("BACKEND_LOG_OCID")
