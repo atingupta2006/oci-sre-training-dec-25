@@ -5,6 +5,7 @@ python3 -m venv ~/venv
 source ~/venv/bin/activate
 pip install -r requirements.txt
 
+mv env.example .env
 nohup python3 backend-metrics-to-oci.py > metrics.out 2>&1 &
 nohup python3 backend-logs-to-oci.py > backend-logs.out 2>&1 &
 nohup python3 frontend-access-logs-to-oci.py > fe-access.out 2>&1 &
