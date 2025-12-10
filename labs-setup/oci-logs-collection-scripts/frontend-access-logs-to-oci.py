@@ -134,7 +134,7 @@ def send_logs(batch):
 
         entries.append(
             LogEntry(
-                data=parsed,
+                data=line,   # ✅ Must be string
                 id=str(time.time_ns()),
                 time=datetime.now(timezone.utc).isoformat(),
             )
