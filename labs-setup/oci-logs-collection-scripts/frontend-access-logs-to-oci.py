@@ -60,21 +60,26 @@ if not NGINX_ACCESS_LOG_FILE:
 # -------------------------------------------------------
 # OCI Logging Ingestion Client
 # -------------------------------------------------------
+# -------------------------------------------------------
+# OCI Logging Ingestion Client (Instance Principals)
+# -------------------------------------------------------
 try:
-    config = oci.config.from_file(profile_name=OCI_PROFILE)
+    signer = oci.auth.signers.InstancePrincipalsSecurityTokenSigner()
 except Exception as e:
-    raise RuntimeError(f"Unable to load OCI config ({OCI_PROFILE}): {e}")
+    raise RuntimeError(f"Unable to initialize Instance Principals signer: {e}")
 
-region = OCI_REGION or config.get("region")
+region = OCI_REGION or signer.region
 if not region:
-    raise RuntimeError("Region missing in .env and OCI config")
+    raise RuntimeError("Region missing in .env and instance metadata")
 
 log_endpoint = f"https://ingestion.logging.{region}.oraclecloud.com"
 
 logging_client = oci.loggingingestion.LoggingClient(
-    config,
+    config={},
+    signer=signer,
     service_endpoint=log_endpoint,
 )
+
 
 hostname = socket.gethostname()
 
