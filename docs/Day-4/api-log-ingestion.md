@@ -117,7 +117,6 @@ sudo tail -n 50 /var/log/unified-monitoring-agent/unified-monitoring-agent.log
 You should see:
 
 ```
-downloading assignment
 applying unified agent configuration
 following tail of /opt/bharatmart/logs/api.log
 put_logs request
