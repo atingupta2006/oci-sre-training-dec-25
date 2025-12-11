@@ -1,240 +1,302 @@
-# Day 3: Reduce Toil Using Scheduled Functions (OCI Functions + Events) - Hands-on Lab
+# Day 3: Reduce Toil Using Scheduled Functions (OCI Functions + Events)
 
-### Audience Context: IT Engineers and Developers
+## **0. Deployment Assumptions**
 
----
+This lab uses **local development on an Ubuntu VM**, with:
 
-## 0. Deployment Assumptions
-
-For this hands-on lab, you will use OCI Functions and Events to automate scheduled tasks and reduce toil.
+* Docker installed using `get-docker`
+* Fn CLI
+* OCI CLI
+* A Function Application already created in OCI Console
+* OCI Events Rule to schedule the function
 
 **Prerequisites:**
-* OCI tenancy with appropriate permissions
-* OCI Functions and Events access
-* Understanding of toil concepts from previous topics
+
+* OCI Tenancy with permissions to use Functions, Events, and Logging
+* VCN + Subnet configured for Functions
+* Ubuntu VM with Docker + Fn CLI + OCI CLI installed
+* OCIR login configured
 
 ---
 
-## 1. Objective of This Hands-On
+## **1. Objective of This Hands‑On**
 
-By completing this exercise, students will:
+By the end of this hands-on, participants will:
 
-* Understand how scheduled automation reduces toil
-* Create an OCI Function for automated tasks
-* Configure OCI Events for scheduled function execution
-* Automate repetitive operational tasks
-* Measure toil reduction from automation
-
----
-
-## 2. Background Concepts
-
-### 2.1 Scheduled Automation for Toil Reduction
-
-Scheduled automation eliminates toil by:
-
-* Running routine tasks automatically on a schedule
-* Eliminating manual intervention for repetitive work
-* Ensuring consistency in task execution
-* Freeing engineering time for valuable work
-
-### 2.2 OCI Functions and Events
-
-**OCI Functions:** Serverless function execution platform
-* Write functions in Python, Node.js, Java, Go, etc.
-* Pay only for execution time
-* Automatic scaling
-
-**OCI Events:** Event routing and scheduling service
-* Trigger functions on schedules
-* Route events to functions
-* Integrate with OCI services
-
-Together, they enable scheduled automation for toil reduction.
+✔ Understand how scheduled automation reduces operational toil
+✔ Create an automated health‑check function using Python
+✔ Deploy the function to OCI using Fn CLI
+✔ Configure OCI Events to trigger the function on a schedule
+✔ Verify automation via logs and invocations
+✔ Measure toil reduction achieved through automation
 
 ---
 
-## 3. Hands-On Task 1 — Create an OCI Function
+## **2. Background Concepts**
 
-#### Purpose
+### **2.1 How Scheduled Automation Reduces Toil**
 
-Create a function that automates a repetitive operational task.
+Automation eliminates repetitive manual tasks by:
 
-**Example Use Case:** Automated log cleanup, health check automation, metric collection, etc.
+* Running tasks automatically on a schedule
+* Ensuring consistent execution
+* Removing human error
+* Freeing engineers for value‑added work
 
-### Steps:
+### **2.2 OCI Functions + OCI Events**
 
-1. **Create Function Application:**
-   - Navigate to **OCI Console → Developer Services → Functions → Applications**
-   - Click **Create Application**
-   - Name: `<student-id>-automation-app`
-   - Compartment: Select your compartment
-   - VCN: Select VCN with Internet Gateway
-   - Subnets: Select public subnet
-   - Click **Create**
+**OCI Functions**
+A fully managed FaaS (Functions‑as‑a‑Service) platform.
+Key benefits:
 
-2. **Create Function:**
-   - Click on your application
-   - Click **Create Function**
-   - Choose **Cloud Shell** or **Local Development** approach
-   - Follow prompts to create function
+* Serverless execution
+* Auto‑scaling
+* Pay per execution
+* Supports Python, Node.js, Java, Go
 
-> **📝 Note: Repository Function Example Available**
-> 
-> A complete health check function example is available in the application repository:
-> - **Location:** `scripts/oci-functions/health-check-function/`
-> - **Files:** `func.py`, `func.yaml`, `requirements.txt`
-> - **Documentation:** See `scripts/oci-functions/README.md`
-> 
-> You can use this example as a starting point, or follow the steps below to create your own.
+**OCI Events**
+Event routing + scheduling platform.
+Used for:
 
-**Example Function (Python) - Automated Health Check:**
+* Triggering scheduled tasks
+* Forwarding service events to Functions
+* Workflow automation
+
+Together, they enable scheduled operational automation.
+
+---
+
+# **3. Hands‑On Task 1 — Create the Health‑Check OCI Function (Local Development)**
+
+### **Purpose**
+
+We will create a Python OCI Function that performs a periodic health check against a backend service or load balancer endpoint.
+
+---
+
+## **3.1 Create Application (OCI Console)**
+
+Performed **once**, from the UI.
+
+1. Go to **Developer Services → Functions → Applications**
+2. Click **Create Application**
+3. Name:
+
+```
+<student-id>-automation-app
+```
+
+4. Choose your compartment
+5. Select VCN with **Internet Gateway**
+6. Select **public subnet**
+7. Click **Create**
+
+---
+
+# **3.2 Function Creation (Local Ubuntu VM)**
+
+All steps below run on your **local Ubuntu VM**.
+
+### **Step 1 — Create working directory**
+
+```bash
+mkdir health-check-fn && cd health-check-fn
+```
+
+### **Step 2 — Initialize function project**
+
+```bash
+fn init --runtime python health-check
+cd health-check
+```
+
+This creates:
+
+```
+func.py
+func.yaml
+requirements.txt
+```
+
+---
+
+# **3.3 Replace Function Code with Working Health‑Check Function**
+
+Open:
+
+```bash
+nano func.py
+```
+
+Replace contents with:
+
 ```python
 import io
 import json
+import logging
+from datetime import datetime
 import requests
+from fdk import response
 
-def handler(ctx, data: io.BytesIO=None):
-    """
-    Automated health check function for BharatMart API
-    Reduces toil of manual health checks
-    """
+def handler(ctx, data: io.BytesIO = None):
+    url = "http://<your-lb-ip-or-service>/api/health"
+    result = {}
+
     try:
-        # Health check endpoint
-        response = requests.get('http://<your-lb-ip>/api/health', timeout=5)
-        
+        r = requests.get(url, timeout=5)
         result = {
-            'status': 'healthy' if response.status_code == 200 else 'unhealthy',
-            'status_code': response.status_code,
-            'timestamp': datetime.utcnow().isoformat()
+            "target": url,
+            "status": "healthy" if r.status_code == 200 else "unhealthy",
+            "status_code": r.status_code,
+            "timestamp": datetime.utcnow().isoformat()
         }
-        
-        # Log result or send to monitoring
-        print(json.dumps(result))
-        
-        return result
     except Exception as e:
-        return {
-            'status': 'error',
-            'error': str(e)
+        result = {
+            "target": url,
+            "status": "error",
+            "error": str(e),
+            "timestamp": datetime.utcnow().isoformat()
         }
+
+    logging.getLogger().info(json.dumps(result))
+
+    return response.Response(
+        ctx,
+        response_data=json.dumps(result),
+        headers={"Content-Type": "application/json"}
+    )
 ```
 
-3. **Deploy Function:**
-   - Deploy function using `fn deploy` command
-   - Verify function is active
+---
+
+# **3.4 Update requirements.txt**
+
+```bash
+nano requirements.txt
+```
+
+Replace with:
+
+```
+fdk
+requests
+```
 
 ---
 
-## 4. Hands-On Task 2 — Configure Scheduled Event
+# **3.5 Verify func.yaml**
 
-#### Purpose
+A minimal working config:
 
-Configure OCI Events to trigger the function on a schedule.
-
-### Steps:
-
-1. **Create Event Rule:**
-   - Navigate to **OCI Console → Application Integration → Events Service → Rules**
-   - Click **Create Rule**
-   - Name: `<student-id>-scheduled-health-check`
-   - Display Name: `Scheduled Health Check Automation`
-
-2. **Configure Conditions:**
-   - **Condition:** Select **Event Type: Schedule**
-   - **Schedule:** Set schedule (e.g., every 5 minutes, daily at 2 AM)
-   - Example: `cron(0/5 * * * ? *)` for every 5 minutes
-
-3. **Configure Actions:**
-   - **Action Type:** Functions
-   - **Function Application:** Select your function application
-   - **Function:** Select your health check function
-   - Click **Create**
+```
+schema_version: 20180708
+name: health-check
+version: 0.0.1
+runtime: python
+entrypoint: /python/bin/fdk /function/func.py handler
+memory: 256
+```
 
 ---
 
-## 5. Hands-On Task 3 — Verify Automation
+# **3.6 Build & Deploy the Function**
 
-#### Purpose
+Make sure Docker + OCIR login + FN_REGISTRY are configured.
 
-Verify that the scheduled automation is working and reducing toil.
+### **Build**
 
-### Steps:
+```bash
+fn build
+```
 
-1. **Monitor Function Executions:**
-   - Navigate to **OCI Console → Developer Services → Functions → Applications**
-   - Click your application
-   - View function invocations
-   - Verify function is executing on schedule
+### **Deploy**
 
-2. **Check Function Logs:**
-   - View function logs to verify execution
-   - Check for successful health checks
-   - Identify any errors
+```bash
+fn list apps
+fn deploy --app <app-name>
+```
 
-3. **Measure Toil Reduction:**
-   - Calculate time saved: Manual checks (e.g., 5 min/day) vs Automated (0 min/day)
-   - Document frequency: How often task was done manually
-   - Calculate toil score reduction
+### **Invoke manually (test)**
 
----
+```bash
+fn invoke <app-name> health-check
+```
 
-## 6. Summary of the Hands-On
+Expected output:
 
-In this exercise, you:
-
-* Created an OCI Function for automated tasks
-* Configured OCI Events for scheduled execution
-* Automated a repetitive operational task
-* Measured toil reduction from automation
-
-This demonstrates how scheduled automation eliminates toil in day-to-day operations.
+```json
+{"status": "healthy", ... }
+```
 
 ---
 
-## 7. Additional Use Cases
+# **4. Hands‑On Task 2 — Configure Scheduled Event Rule**
 
-Consider automating:
+### **Purpose**
 
-* Log cleanup and rotation
-* Database backup verification
-* Metric collection and reporting
-* Configuration validation
-* Health checks and status reporting
-* Inventory synchronization
-* Report generation
+Trigger the health-check function automatically on a schedule.
 
 ---
 
-## 8. Solutions Key (Instructor Reference)
+## **4.1 Create Event Rule (OCI Console)**
 
-### ✔ Solution Key — Task 1: Function Creation
+1. Go to:
+   **Application Integration → Events Service → Rules**
+2. Click **Create Rule**
+3. Provide:
 
-#### Expected Configuration:
-
-* Application: `<student-id>-automation-app`
-* Function: Health check or similar automation function
-* Runtime: Python, Node.js, or Java
-* Status: Active
-
-### ✔ Solution Key — Task 2: Event Configuration
-
-#### Expected Settings:
-
-* Rule: `<student-id>-scheduled-health-check`
-* Schedule: Configured (e.g., every 5 minutes)
-* Action: Function invocation
-* Status: Active
-
-### ✔ Solution Key — Task 3: Verification
-
-#### Expected Results:
-
-* Function executing on schedule
-* Logs showing successful executions
-* Toil reduction measured and documented
+```
+Name: scheduled-<app-name>-health-check
+Display Name: Scheduled Health Check Automation
+```
 
 ---
 
-## End of Hands-On Document
+## **4.2 Configure Condition**
 
+Select:
+
+* **Event Type: Schedule**
+
+---
+
+## **4.3 Configure Action**
+
+* **Action Type:** Functions
+* **Application:** `<app-name>`
+* **Function:** `health-check`
+
+Click **Create**.
+
+---
+
+# **5. Hands‑On Task 3 — Verification of Automation**
+
+### **5.1 View Function Invocations**
+
+Navigate:
+**Developer Services → Functions → Applications → Your Application → Functions → health-check**
+
+You should see invocation counts increasing over time.
+
+---
+
+### **5.2 View Logs in Logging Service**
+
+Function logs appear under:
+
+**Observability & Management → Logging → Log Groups**
+
+Look for:
+
+```
+<app-name>-functions log group
+```
+
+Check for:
+
+* Scheduled executions
+* Health check results
+* Any errors
+
+---
