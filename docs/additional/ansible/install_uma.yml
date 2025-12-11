@@ -1,0 +1,37 @@
+---
+- name: Enable and restart UMA on backend servers
+  hosts: backend
+  become: yes
+
+  tasks:
+
+    - name: Ensure UMA service is enabled
+      ansible.builtin.systemd:
+        name: unified-monitoring-agent
+        enabled: yes
+
+    - name: Restart UMA service
+      ansible.builtin.systemd:
+        name: unified-monitoring-agent
+        state: restarted
+
+    - name: Wait 3 seconds
+      ansible.builtin.pause:
+        seconds: 3
+
+    - name: Verify UMA is active
+      ansible.builtin.systemd:
+        name: unified-monitoring-agent
+      register: uma_status
+
+    - name: Print UMA status
+      ansible.builtin.debug:
+        var: uma_status
+
+    - name: Tail UMA logs (first 20 lines)
+      ansible.builtin.command: "tail -n 20 /var/log/unified-monitoring-agent/unified-monitoring-agent.log"
+      register: uma_logs
+
+    - name: Show UMA logs
+      ansible.builtin.debug:
+        msg: "{{ uma_logs.stdout }}"

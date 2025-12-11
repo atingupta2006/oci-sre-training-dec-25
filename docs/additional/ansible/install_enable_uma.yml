@@ -1,0 +1,126 @@
+---
+# install_enable_uma.yml
+
+- name: Ensure UMA is installed and running on backend servers
+  hosts: backend
+  become: true
+
+  vars:
+    app_log_path: /opt/bharatmart/logs/api.log
+    agent_packages:
+      - oracle-cloud-agent
+      - unified-monitoring-agent
+
+  tasks:
+
+    - name: Enable OCI & Developer repos (idempotent)
+      ansible.builtin.command: >
+        dnf config-manager --enable ol8_oci_included ol8_developer
+      changed_when: false
+      ignore_errors: true
+
+    - name: Refresh package cache
+      ansible.builtin.command: dnf makecache
+      register: dnf_cache
+      changed_when: "'Metadata cache created.' in dnf_cache.stdout or dnf_cache.rc == 0"
+
+    - name: Install agent packages if available
+      ansible.builtin.yum:
+        name: "{{ agent_packages }}"
+        state: present
+        install_weak_deps: no
+      register: install_agent
+      failed_when: false
+
+    - name: Check UMA binary exists
+      ansible.builtin.stat:
+        path: /opt/unified-monitoring-agent/bin/fluentd
+      register: uma_stat
+
+    - name: Ensure UMA service is started & enabled
+      ansible.builtin.service:
+        name: unified-monitoring-agent
+        state: started
+        enabled: yes
+      when: uma_stat.stat.exists
+      register: uma_service
+      failed_when: false
+
+    - name: Pause for UMA to initialize
+      ansible.builtin.pause:
+        seconds: 4
+      when: uma_service is defined
+
+    - name: Check UMA logs for tailing
+      ansible.builtin.shell: |
+        grep -E "following tail of {{ app_log_path }}" /var/log/unified-monitoring-agent/unified-monitoring-agent.log 2>/dev/null || true
+      register: tail_check
+      changed_when: false
+
+    - name: Show tail check result
+      ansible.builtin.debug:
+        msg: "{{ tail_check.stdout | default('(no match)') }}"
+
+    - name: Show recent UMA log
+      ansible.builtin.shell: tail -n 40 /var/log/unified-monitoring-agent/unified-monitoring-agent.log || true
+      register: uma_tail
+      changed_when: false
+
+    - name: Display UMA log snippet
+      ansible.builtin.debug:
+        msg: "{{ uma_tail.stdout | default('(UMA log missing)') }}"
+
+    - name: Check app log file exists
+      ansible.builtin.stat:
+        path: "{{ app_log_path }}"
+      register: apilog_stat
+
+    - name: Show app log info
+      ansible.builtin.debug:
+        msg: "Log exists={{ apilog_stat.stat.exists }}, size={{ apilog_stat.stat.size | default('n/a') }}"
+
+
+
+# -----------------------------
+# FRONTEND TASKS (OCI CLI ONLY)
+# -----------------------------
+- name: "Optional: Use OCI CLI from frontend to list or assign agent config"
+  hosts: frontend
+  become: false
+
+  vars:
+    oci_agent_configuration_id: "ocid1.unifiedagentconfiguration.oc1.ap-mumbai-1.amaaaaaahqssvraarghitlzg2rmt54ejnnmciay4dm2ce64qx5lflcsiyxwa"
+    target_instance_id: "ocid1.instance.oc1.ap-mumbai-1.anrg6ljrhqssvracbd3mvij4wtgoedpq2plzd2ggcf7jgxj5bzuol5otmmla"
+    log_group_id: "ocid1.loggroup.oc1.ap-mumbai-1.amaaaaaahqssvraayrcqovuesclhddcr7kcwsd52yf5dm2pp4l3z6krqpr5q"
+
+  tasks:
+
+    - name: "Check oci CLI is installed"
+      ansible.builtin.command: which oci
+      register: which_oci
+      failed_when: which_oci.rc != 0
+      changed_when: false
+
+    - name: "List UMA Agent Configurations"
+      ansible.builtin.command: oci logging agent-configuration list --all
+      register: agent_list
+      changed_when: false
+      failed_when: false
+
+    - name: "Show agent configuration list"
+      ansible.builtin.debug:
+        msg: "{{ agent_list.stdout | default('(empty)') }}"
+
+    # OPTIONAL ASSIGNMENT (only if CLI supports assign-to-instance)
+    - name: "(OPTIONAL) Assign config to instance via CLI"
+      ansible.builtin.command: >
+        oci logging agent-configuration assign-to-instance
+        --agent-configuration-id {{ oci_agent_configuration_id }}
+        --instance-id {{ target_instance_id }}
+      register: assign_result
+      changed_when: false
+      ignore_errors: true
+
+    - name: "Assignment result"
+      ansible.builtin.debug:
+        msg: "{{ assign_result.stdout | default(assign_result.stderr | default('(no result)')) }}"
