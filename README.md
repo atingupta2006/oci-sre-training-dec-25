@@ -18,7 +18,6 @@
 
 ### **Demonstration Only**
 
-* Create a multi-region OCI tenancy (practical setup)
 * Launch & configure OCI Compute instances using Infrastructure-as-Code (Terraform)
 
 ### **Hands-on Labs**
@@ -103,14 +102,6 @@
 
 * Implement OCI Service Connector Hub for automated incident response
 * Secure automation using OCI Vault + dynamic secrets
-* Use OCI REST APIs to build an SRE dashboard
 * Deploy a sample OCI DevOps Pipeline with SLIs embedded
 
 ---
-
-## ✅ **End of Day 5: Review, Q&A, Sample Exam**
-
-* Sample SRE Foundation Exam Q&A
-* Review case studies of SRE adoption in cloud
-* Feedback, improvements, and scaling strategy
-
