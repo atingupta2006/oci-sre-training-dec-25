@@ -206,3 +206,22 @@ This confirms the instance belongs to an **instance pool** and must use `instanc
 ```bash
 sudo lsof /opt/bharatmart/logs/api.log | grep unified
 ```
+
+
+## Format for JSON
+{
+  "inputType": "logPath",
+  "name": "bharatmart-api-source",
+  "filePatterns": ["/opt/bharatmart/logs/api.log"],
+  "parser": {
+    "parserType": "JSON",
+    "isNestedJSON": false,
+    "timeType": "string",
+    "timeFormat": "%Y-%m-%d %H:%M:%S",
+    "fieldTimeKey": "timestamp",
+    "isEstimateCurrentEvent": false,
+    "isKeepTimeKey": false,
+    "timeoutInMilliseconds": 1000,
+    "isNullEmptyString": false
+  }
+}
