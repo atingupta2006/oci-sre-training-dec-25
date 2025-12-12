@@ -1,0 +1,18 @@
+{
+  "displayName": "alarm-to-health-check",
+  "isEnabled": true,
+  "compartmentId": "<COMPARTMENT_OCID>",
+  "condition": "data.compartmentId = '<COMPARTMENT_OCID>' AND data.type = 'com.oraclecloud.monitoring.metric.Alarm' AND data.payload.alarmName = '<ALARM_NAME>'",
+  "actions": [
+    {
+      "type": "com.oraclecloud.functions",
+      "isEnabled": true,
+      "action": {
+        "functionId": "<FUNCTION_OCID>",
+        "applicationId": "<APPLICATION_OCID>"
+      }
+    }
+  ]
+}
+
+
